@@ -5,8 +5,8 @@
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fill_nans = @tp_func_fill_nans_v001;
-retrieve = @tp_func_retrieve_v001;
+fill_nans = @tp_func_fill_nans;
+retrieve = @tp_func_retrieve;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IMPORTACAO DE DATASET E SETUP INICIAL %
@@ -62,13 +62,16 @@ writetable(tabDS, output_folder + "Common/out0_" + name + "_num.xlsx");
 
 ignore_cols = [target_col]; % nao preencher NaNs na coluna do target
 
-fprintf("\n\n >>> A preencher NaNs dos ATRIBUTOS ...\n");
+fprintf("\n\n ######################################################\n");
+fprintf(" >>> A preencher NaNs dos ATRIBUTOS ...\n\n");
+
 tabDS_dict = fill_nans(tabDS, categorical_att_cols, ignore_cols);
 
-writetable(tabDS_dict{"Median"}, output_folder + "Median/out1_" + name + "_nonans_median.xlsx");
-writetable(tabDS_dict{"MICE"}  , output_folder + "MICE/out1_" + name + "_nonans_mice.xlsx"  );
+writetable(tabDS_dict{"Median"}, output_folder + "Median/out1_" + name + "_fillattna_median.xlsx");
+writetable(tabDS_dict{"MICE"}  , output_folder + "MICE/out1_" + name + "_fillattna_mice.xlsx"  );
 
 fprintf("\n                                       ... concluido!\n");
+fprintf(" ######################################################\n\n");
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,11 +81,8 @@ fprintf("\n                                       ... concluido!\n");
 % preenche NaNs via CBR/Retrieve usando as linhas sem NaNs para determinar
 % a similaridade -> mais similar -> copiar target
 
-tabs_names = keys(tabDS_dict);
+for tab_name = transpose( keys(tabDS_dict) )
 
-for idx = 1:length(tabs_names)
-
-    tab_name = tabs_names(idx);
     tabDS2 = tabDS_dict{tab_name};
 
     % guarda o idx para as operaçoes mais 'a frente na case_lib
@@ -116,8 +116,9 @@ for idx = 1:length(tabs_names)
                           2 , ... % 13 cooling_type
                           3 ];... % 14 sensor_status
 
-
-    fprintf("\n\n >>> A preencher NaNs do TARGET - tabela %s\n", tab_name);
+    fprintf("\n\n ##############################################\n");
+    fprintf(" >>> A preencher NaNs do TARGET - tabela %s\n", tab_name);
+    fprintf(" ##############################################\n\n");
     
     for i = 1:size(tabDS,1)
         
@@ -147,10 +148,12 @@ for idx = 1:length(tabs_names)
     
     end
     
+    % guarda tabela do dataset no dicionario
     tabDS_dict{tab_name} = tabDS2;
 
-    writetable(tabDS2, output_folder + tab_name + "/out2" + "_" + name + "_nonans_" + tab_name + "_final.xlsx");
+    writetable(tabDS2, output_folder + tab_name + "/out2" + "_" + name + "_FULLDATA_" + tab_name + ".xlsx");
     
+    fprintf("\n #############################################\n\n");
 end
 
 
@@ -162,9 +165,8 @@ end
 % Transforma a coluna do target em 3 colunas binarias com o nome de cada
 % saida possivel
 
-for idx = 1:length(tabs_names)
+for tab_name = transpose( keys(tabDS_dict) )
 
-    tab_name = tabs_names(idx);
     tabDS2 = tabDS_dict{tab_name};
     
     test = unique(tabDS2{:,target_col});
@@ -177,10 +179,17 @@ for idx = 1:length(tabs_names)
     end
     
     % elimina a coluna class_cat/target_col
-    tabDS2.(target_col) = [];
-    
-    tabDS2 = tabDS2./max(tabDS2);
-    
-    tabDS_dict{tab_name} = tabDS2;
-    writetable(tabDS2, output_folder + tab_name + "/out3" + "_" + name + "_nonans_" + tab_name + "_final_NN.xlsx");
+    % tabDS2.(target_col) = [];
+
+    % RESCALING
+    % usamos o tabDS2{:, attr_cols} para normalizar apenas os atribrutos
+    cols_min  = min(tabDS2{:, att_cols});
+    cols_max  = max(tabDS2{:, att_cols});
+    tabParams = table(att_cols', cols_min', cols_max', 'VariableNames', {'Attribute', 'Min', 'Max'});
+
+    tabDS2{:, att_cols} = ( tabDS2{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
+
+    % salva as tabelas
+    writetable(tabDS2   , output_folder + tab_name + "/out3" + "_" + name + "_FULLDATA_NORM_" + tab_name + ".xlsx");
+    writetable(tabParams, output_folder + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_"   + tab_name + ".xlsx")
 end

@@ -1,7 +1,8 @@
-function [new_temperature] = tp_func_reuse(retrieved_cases, new_case)
+function [new_temperature] = tp_func_reuse(tabDS, tabNormParams, vibration, rotation_speed, voltage)
 
-    clc
-    clear
+    % Assume que tabDS vem normalizado!
+    vibration = tabNormParams()
+    
     
     %set non-random seed
     rng('default');
