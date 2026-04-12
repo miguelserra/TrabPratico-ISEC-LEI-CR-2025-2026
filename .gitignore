@@ -1,0 +1,57 @@
+# Autosave files
+*.asv
+*.m~
+*.autosave
+*.slx.r*
+*.mdl.r*
+matlab.log
+
+# Derived content-obscured files
+*.p
+
+# Compiled MEX files
+*.mex*
+
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
+
+# Deployable archives
+*.ctf
+
+# Generated helpsearch folders
+helpsearch*/
+
+# Code generation folders
+slprj/
+sccprj/
+codegen/
+
+# Cache files
+*.slxc
+
+# Cloud based storage dotfile
+.MATLABDriveTag
+
+# buildtool cache folder
+.buildtool/
+
+# SimBiology backup files
+*.sbproj.backup
+*.sbproj.bak
+
+
+# Ignorar ficheiros de configuração do Windows
+desktop.ini
+thumbs.db
+.DS_Store
+
+# Ignorar ficheiros temporários do Office (Word/Excel)
+~$*
+.fuse_hidden*
+*.tmp
+
+# Ignorar pastas
+Code_aulaCBR/
+
+
