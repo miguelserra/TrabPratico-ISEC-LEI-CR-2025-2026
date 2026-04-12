@@ -16,12 +16,15 @@ retain   = @tp_func_retain;
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 datasets_names = ["Median" , "MICE"];
+dataset_types  = ["FULLDATA_", "FULLDATA_NORM_"];
 
 for name = datasets_names
+    for type = dataset_types
     
-    file_name = 
-    tabDS = readtable("../DADOS/" + name + ".csv");
-
+        input_file_path = 
+        tabDS = readtable("../DADOS/" + name + ".csv");
+    
+    end
 end
 
 

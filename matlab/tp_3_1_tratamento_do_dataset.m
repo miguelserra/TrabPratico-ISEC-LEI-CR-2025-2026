@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fill_nans = @tp_func_fill_nans;
-retrieve = @tp_func_retrieve;
+retrieve  = @tp_func_retrieve;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IMPORTACAO DE DATASET E SETUP INICIAL %
@@ -22,6 +22,9 @@ tabDS = readtable("../DADOS/" + name + ".csv");
 all_vars = string(tabDS.Properties.VariableNames);
 att_cols = all_vars(1:end-1);
 target_col = all_vars(end);
+
+% colunas de atributos numericos
+num_att_cols = att_cols(1:end-4);
 
 % colunas de atributos do tipo categorico a serem processadas
 categorical_att_cols = att_cols(end-3:end);
@@ -67,8 +70,8 @@ fprintf(" >>> A preencher NaNs dos ATRIBUTOS ...\n\n");
 
 tabDS_dict = fill_nans(tabDS, categorical_att_cols, ignore_cols);
 
-writetable(tabDS_dict{"Median"}, output_folder + "Median/out1_" + name + "_fillattna_median.xlsx");
-writetable(tabDS_dict{"MICE"}  , output_folder + "MICE/out1_" + name + "_fillattna_mice.xlsx"  );
+writetable(tabDS_dict{"Median"}, output_folder + "Median/out1_" + name + "_imputedAtt_median.xlsx");
+writetable(tabDS_dict{"MICE"}  , output_folder + "MICE/out1_" + name + "_imputedAtt_mice.xlsx"  );
 
 fprintf("\n                                       ... concluido!\n");
 fprintf(" ######################################################\n\n");
@@ -84,6 +87,13 @@ fprintf(" ######################################################\n\n");
 for tab_name = transpose( keys(tabDS_dict) )
 
     tabDS2 = tabDS_dict{tab_name};
+    
+    % para esta tarefa e' necessario normalizar os valores numericos antes
+    % de os passar ao retrieve
+    max_vals = max(tabDS2{:,num_att_cols});
+    min_vals = min(tabDS2{:,num_att_cols});
+    ranges   = max_vals - min_vals;
+    tabDS2{:,num_att_cols} = ( tabDS2{:,num_att_cols} - min_vals ) ./ ranges;
 
     % guarda o idx para as operaçoes mais 'a frente na case_lib
     tabDS2.original_idx = transpose(1:size(tabDS2, 1));
@@ -120,7 +130,7 @@ for tab_name = transpose( keys(tabDS_dict) )
     fprintf(" >>> A preencher NaNs do TARGET - tabela %s\n", tab_name);
     fprintf(" ##############################################\n\n");
     
-    for i = 1:size(tabDS,1)
+    for i = 1:size(tabDS2,1)
         
         % se linha tem NaN no Target
         if ismissing(tabDS2(i,target_col))
@@ -151,7 +161,7 @@ for tab_name = transpose( keys(tabDS_dict) )
     % guarda tabela do dataset no dicionario
     tabDS_dict{tab_name} = tabDS2;
 
-    writetable(tabDS2, output_folder + tab_name + "/out2" + "_" + name + "_FULLDATA_" + tab_name + ".xlsx");
+    writetable(tabDS2, output_folder + tab_name + "/out2" + "_" + name + "_IMPUTED_ORIG_" + tab_name + ".xlsx");
     
     fprintf("\n #############################################\n\n");
 end
@@ -190,6 +200,6 @@ for tab_name = transpose( keys(tabDS_dict) )
     tabDS2{:, att_cols} = ( tabDS2{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
 
     % salva as tabelas
-    writetable(tabDS2   , output_folder + tab_name + "/out3" + "_" + name + "_FULLDATA_NORM_" + tab_name + ".xlsx");
+    writetable(tabDS2   , output_folder + tab_name + "/out3" + "_" + name + "_IMPUTED_NORM_" + tab_name + ".xlsx");
     writetable(tabParams, output_folder + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_"   + tab_name + ".xlsx")
 end

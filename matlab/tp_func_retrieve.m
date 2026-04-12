@@ -26,40 +26,40 @@ function [retrieved_indexes, similarities, new_case] = tp_func_retrieve(case_lib
     %    1, ... % 13 cooling_type
     %    4];... % 14 sensor_status
     
-    sims_dic = dictionary();
-    sims_dic("maintenance_level") = get_maintenance_level_similarities();
-    sims_dic("operating_mode")    = get_operating_mode_similarities();
-    sims_dic("cooling_type")      = get_cooling_type_similarities();
-    sims_dic("sensor_status")     = get_sensor_status_similarities();
+    sim_matrices_dic = dictionary();
+    sim_matrices_dic("maintenance_level") = get_maintenance_level_similarities();
+    sim_matrices_dic("operating_mode")    = get_operating_mode_similarities();
+    sim_matrices_dic("cooling_type")      = get_cooling_type_similarities();
+    sim_matrices_dic("sensor_status")     = get_sensor_status_similarities();
 
 
-    max_values = max(att_cols,[],1);
     all_distances = zeros(num_cases, num_att);
     
-    % calculo de distancias de attributos numerico
+    % calculo de distancias de attributos numericos
     for j = 1 : num_att-4
-        
         att_name = att_names{j};
-        max_val = max_values.(att_name);
-
-        % extrai a coluna inteira e o valor do new_case
-        base_case_norm = case_lib.(att_name) / max_val;
-        new_case_norm = new_case.(att_name) / max_val;
-        
-        all_distances(:, j) = calc_lin_dist(base_case_norm, new_case_norm);
-
+        all_distances(:, j) = calc_lin_dist(case_lib.(att_name), new_case.(att_name));
     end
 
     for j = num_att-3 : num_att
            
         att_name = att_names{j};
-        sims = sims_dic(att_name);
+        sim_matrix = sim_matrices_dic(att_name);
 
-        for i = 1 : num_cases
-            all_distances(i, j) = calc_local_dist( sims, ...
-                                                   case_lib{i, att_name}, ...
-                                                   new_case{1, att_name});
-        end
+        % for i = 1 : num_cases
+        %     all_distances(i, j) = calc_local_dist( sim_matrix, ...
+        %                                            case_lib{i, att_name}, ...
+        %                                            new_case{1, att_name});
+        % end
+        
+        % forma vetorizada mais rapida a calcular que o for-loop 
+        idx_cases   = double( case_lib{:, att_name} );
+        idx_newcase = double( new_case{1, att_name} );
+
+        sims_extraidas = sim_matrix.similarities(idx_cases, idx_newcase);
+
+        all_distances(:, j) = 1 - sims_extraidas;
+        
     end
 
 
@@ -71,45 +71,6 @@ function [retrieved_indexes, similarities, new_case] = tp_func_retrieve(case_lib
     similarities = final_similarities(mask);
     
 
-    %retrieved_indexes = [];
-    %similarities      = [];
-    %
-    %for i = 1 : num_cases
-    %    
-    %    distances = zeros( 1 , num_att );
-    %
-    %    % calculo de distancias de attributos numericos
-    %    for j = 1 : num_att-4
-    %        base_case_norm = case_lib{i,att_names(j)} / max_values{1,att_names(j)};
-    %        new_case_norm  = new_case{1,att_names(j)} / max_values{1,att_names(j)};
-    %        distances(1,j) = calc_lin_dist(base_case_norm, new_case_norm);
-    %    end
-    %    
-    %    % calculo de distancias de attributos categoricos
-    %    for j = num_att-3 : num_att
-    %
-    %        distances(1,j) = calc_local_dist( sims_dic( att_names(j) )     , ...
-    %                                          case_lib{ i , att_names(j) } , ...
-    %                                          new_case{ 1 , att_names(j) } );
-    %    end
-    %
-    %
-    %    % aplicaçao de pesos 'as distancias
-    %    weighted_distance = distances * weighting_factors';
-    %
-    %    % calculo
-    %    normalized_weighted_distance = weighted_distance / sum(weighting_factors);
-    %    final_similarity = 1 - normalized_weighted_distance;
-    %    
-    %
-    %    
-    %    if final_similarity >= threshold
-    %        retrieved_indexes = [retrieved_indexes i];
-    %        similarities = [similarities final_similarity];
-    %    end
-    %    
-    %    %fprintf('Case %d out of %d has a similarity of %.2f%%...\n', i, size(case_lib,1), final_similarity*100);
-    %end
 end
 
 
@@ -119,8 +80,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [maintenance_level_sim] = get_maintenance_level_similarities()
-
-    maintenance_level_sim.categories = double(categorical({'Low', 'Medium', 'High'}));
+    
+    order = {'Low', 'Medium', 'High'};
+    maintenance_level_sim.categories = double(categorical(order, order));
 
     maintenance_level_sim.similarities = [
           % Low     Medium  High
@@ -132,8 +94,9 @@ function [maintenance_level_sim] = get_maintenance_level_similarities()
 end
 
 function [operating_mode_sim] = get_operating_mode_similarities()
-
-    operating_mode_sim.categories = double(categorical({'Idle', 'Normal', 'Overload'}));
+    
+    order = {'Idle', 'Normal', 'Overload'};
+    operating_mode_sim.categories = double(categorical(order, order));
 
     operating_mode_sim.similarities = [
           % Idle    Normal  Overload
@@ -141,11 +104,13 @@ function [operating_mode_sim] = get_operating_mode_similarities()
             0.3     1.0     0.6      % Normal
             0.0     0.6     1.0      % Overload
     ];
+
 end
 
 function [cooling_type_sim] = get_cooling_type_similarities()
- 
-    cooling_type_sim.categories = double(categorical({'Air', 'Oil'}));
+    
+    order = {'Air', 'Oil'};
+    cooling_type_sim.categories = double(categorical(order, order));
 
     cooling_type_sim.similarities = [
         %   Air     Oil 
@@ -158,7 +123,8 @@ end
 
 function [sensor_status_sim] = get_sensor_status_similarities()
  
-    sensor_status_sim.categories = double(categorical({'OK', 'Warning'}));
+    order = {'OK', 'Warning'};
+    sensor_status_sim.categories = double(categorical(order, order));
 
     sensor_status_sim.similarities = [
         %   OK      Warning 
