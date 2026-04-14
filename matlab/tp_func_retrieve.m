@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%%%   ROTINA RETRIEVE   %%%%%%%%%%%%%%%%%%
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [retrieved_indexes, similarities, new_case] = tp_func_retrieve(case_lib, new_case , threshold, weighting_factors)
+function [retrieved_indexes, similarities] = tp_func_retrieve(case_lib, new_case , threshold, weighting_factors)
     
     num_cases = size(case_lib,1);
     num_att   = size(case_lib,2) - 1;

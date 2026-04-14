@@ -12,30 +12,25 @@ retrieve  = @tp_func_retrieve;
 % IMPORTACAO DE DATASET E SETUP INICIAL %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%nome do ficheiro do dataset de treino
+% nome do ficheiro do dataset de treino
 name = "dataset_TP";
+
+% nome da pasta de output
+output_folder = "OUTPUT_PREP";
 
 % le o dataset para uma tabela/dataframe
 tabDS = readtable("../DADOS/" + name + ".csv");
 
-% colunas de atributos
-all_vars = string(tabDS.Properties.VariableNames);
-att_cols = all_vars(1:end-1);
-target_col = all_vars(end);
-
-% colunas de atributos numericos
-num_att_cols = att_cols(1:end-4);
-
-% colunas de atributos do tipo categorico a serem processadas
-categorical_att_cols = att_cols(end-3:end);
-
-%prepara pasta de output
-time = string(datetime('now', 'Format', 'yyyy-MM-dd_HH.mm')).replace(".","h");
-output_folder = "./OUTPUT_" + time + "/";
-mkdir(output_folder)
-mkdir(output_folder + "Common/")
-mkdir(output_folder + "Median/")
-mkdir(output_folder + "MICE/")
+% prepara as pastas e nomes comuns via script aux
+tp_3_0_setup_common;
+% neste script ficam definidas as variaveis: 
+%       all_vars
+%       att_cols
+%       target_col
+%       num_att_cols
+%       categorical_att_cols
+%       output_folder_path
+%       time
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONVERSAO DE CATEGORICAS EM INTEGER %
@@ -52,7 +47,7 @@ tabDS.cooling_type      = double( categorical(tabDS.cooling_type     , {'Air', '
 tabDS.sensor_status     = double( categorical(tabDS.sensor_status    , {'OK', 'Warning'} ));
 
 % guarda o dataset com categoricas convertidas para int
-writetable(tabDS, output_folder + "Common/out0_" + name + "_num.xlsx");
+writetable(tabDS, output_folder_path + "Common/out0_" + name + "_num.xlsx");
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,8 +65,8 @@ fprintf(" >>> A preencher NaNs dos ATRIBUTOS ...\n\n");
 
 tabDS_dict = fill_nans(tabDS, categorical_att_cols, ignore_cols);
 
-writetable(tabDS_dict{"Median"}, output_folder + "Median/out1_" + name + "_imputedAtt_median.xlsx");
-writetable(tabDS_dict{"MICE"}  , output_folder + "MICE/out1_" + name + "_imputedAtt_mice.xlsx"  );
+writetable(tabDS_dict{"Median"}, output_folder_path + "Median/out1_" + name + "_imputedAtt_median.xlsx");
+writetable(tabDS_dict{"MICE"}  , output_folder_path + "MICE/out1_" + name + "_imputedAtt_mice.xlsx"  );
 
 fprintf("\n                                       ... concluido!\n");
 fprintf(" ######################################################\n\n");
@@ -101,7 +96,14 @@ for tab_name = transpose( keys(tabDS_dict) )
     mask_nans = ismissing(tabDS2.(target_col));
     case_lib = tabDS2(~mask_nans, :);
     
-    % uma vez criada a case_lib apaga
+
+    % NAO ESQUECER QUE len(case_lib) < len(tabDS2) !!!!
+    % POR ISSO E' ESTRITAMENTE NECESSARIO GUARDAR O IDX ORIGINAL ANTES DE
+    % APLICAR A MASCARA mask_nans. DE OUTRA FORMA E' IMPOSSIVEL SABER O IDX
+    % NA TABELA ORIGINAL tabDS2.
+
+
+    % uma vez criada a case_lib apaga a coluna (auxiliar)
     tabDS2.original_idx = [];
 
     % weighting_factors
@@ -138,6 +140,8 @@ for tab_name = transpose( keys(tabDS_dict) )
             fprintf("     CBR/Retrieve - Caso %i... \n", i);
         
             % devolve casos com similaridade acima do threshold (zero aqui)
+            % case_lib(:,all_vars) nao manda a coluna original_idx para
+            % prevenir erro no calculo que
             [retrieved_idxs, retrieved_simil] = retrieve(case_lib(:,all_vars), tabDS2(i,:) , 0.0, weighting_factors);
     
             % obtem max similaridade e idx da lista devolvida pelo Retrive
@@ -161,7 +165,7 @@ for tab_name = transpose( keys(tabDS_dict) )
     % guarda tabela do dataset no dicionario
     tabDS_dict{tab_name} = tabDS2;
 
-    writetable(tabDS2, output_folder + tab_name + "/out2" + "_" + name + "_IMPUTED_ORIG_" + tab_name + ".xlsx");
+    writetable(tabDS2, output_folder_path + tab_name + "/out2" + "_" + name + "_IMPUTED_ORIG_" + tab_name + ".xlsx");
     
     fprintf("\n #############################################\n\n");
 end
@@ -182,7 +186,6 @@ for tab_name = transpose( keys(tabDS_dict) )
     test = unique(tabDS2{:,target_col});
     target_outputs = flip(string(test));
 
-
     for i = 1 : size(target_outputs,1)
         col_name = target_outputs(i);
         tabDS2.(col_name) = double( strcmp( col_name, tabDS2.(target_col) ) );
@@ -200,6 +203,6 @@ for tab_name = transpose( keys(tabDS_dict) )
     tabDS2{:, att_cols} = ( tabDS2{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
 
     % salva as tabelas
-    writetable(tabDS2   , output_folder + tab_name + "/out3" + "_" + name + "_IMPUTED_NORM_" + tab_name + ".xlsx");
-    writetable(tabParams, output_folder + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_"   + tab_name + ".xlsx")
+    writetable(tabDS2   , output_folder_path + tab_name + "/out3" + "_" + name + "_IMPUTED_NORM_" + tab_name + ".xlsx");
+    writetable(tabParams, output_folder_path + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_"   + tab_name + ".xlsx")
 end

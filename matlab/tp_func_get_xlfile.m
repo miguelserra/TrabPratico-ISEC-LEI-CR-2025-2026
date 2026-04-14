@@ -1,10 +1,10 @@
 function folder_path = tp_func_get_xlfile(wildcard_str)
 
-    itens = dir(wildcard_str);
-    folders = itens([itens.isdir]);
+    items = dir(wildcard_str);
+    folders = items(~[items.isdir]);
     
     if isempty(folders)
-        error("[TRAB PRATICO] Nenhuma pasta com o wildcard '" + wildcard_str + "' foi encontrada.");
+        error("[TRAB PRATICO] Nenhum ficheiro com o wildcard '" + wildcard_str + "' foi encontrado.");
     end
     
     [~, idx] = sort({folders.name});
