@@ -21,6 +21,10 @@ output_folder = "OUTPUT_PREP";
 % le o dataset para uma tabela/dataframe
 tabDS = readtable("../DADOS/" + name + ".csv");
 
+% le o dataset de teste para uma tabela/dataframe
+tabDS_T = readtable("../DADOS/" + name + "_test.csv");
+
+
 % prepara as pastas e nomes comuns via script aux
 tp_3_0_setup_common;
 % neste script ficam definidas as variaveis: 
@@ -46,9 +50,14 @@ tabDS.operating_mode    = double( categorical(tabDS.operating_mode   , {'Idle', 
 tabDS.cooling_type      = double( categorical(tabDS.cooling_type     , {'Air', 'Oil'} ));
 tabDS.sensor_status     = double( categorical(tabDS.sensor_status    , {'OK', 'Warning'} ));
 
-% guarda o dataset com categoricas convertidas para int
-writetable(tabDS, output_folder_path + "Common/out0_" + name + "_num.xlsx");
+tabDS_T.maintenance_level = double( categorical(tabDS_T.maintenance_level, {'Low', 'Medium', 'High'} ));
+tabDS_T.operating_mode    = double( categorical(tabDS_T.operating_mode   , {'Idle', 'Normal', 'Overload'} ));
+tabDS_T.cooling_type      = double( categorical(tabDS_T.cooling_type     , {'Air', 'Oil'} ));
+tabDS_T.sensor_status     = double( categorical(tabDS_T.sensor_status    , {'OK', 'Warning'} ));
 
+% guarda o dataset com categoricas convertidas para int
+writetable(tabDS, output_folder_path + "Common/out_" + name + "_num.xlsx");
+writetable(tabDS_T, output_folder_path + "Common/out_" + name + "_test_num.xlsx");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PREENCHE NaNs NAS COLUNAS DOS ATRIBUTOS %
@@ -79,32 +88,32 @@ fprintf(" ######################################################\n\n");
 % preenche NaNs via CBR/Retrieve usando as linhas sem NaNs para determinar
 % a similaridade -> mais similar -> copiar target
 
+disp(tabDS_dict)
+
 for tab_name = transpose( keys(tabDS_dict) )
 
-    tabDS2 = tabDS_dict{tab_name};
+    tabDS = tabDS_dict{tab_name};
     
     % para esta tarefa e' necessario normalizar os valores numericos antes
     % de os passar ao retrieve
-    max_vals = max(tabDS2{:,num_att_cols});
-    min_vals = min(tabDS2{:,num_att_cols});
+    max_vals = max(tabDS{:,num_att_cols});
+    min_vals = min(tabDS{:,num_att_cols});
     ranges   = max_vals - min_vals;
-    tabDS2{:,num_att_cols} = ( tabDS2{:,num_att_cols} - min_vals ) ./ ranges;
+    tabDS{:,num_att_cols} = ( tabDS{:,num_att_cols} - min_vals ) ./ ranges;
 
     % guarda o idx para as operaçoes mais 'a frente na case_lib
-    tabDS2.original_idx = transpose(1:size(tabDS2, 1));
+    tabDS.original_idx = transpose(1:size(tabDS, 1));
 
-    mask_nans = ismissing(tabDS2.(target_col));
-    case_lib = tabDS2(~mask_nans, :);
+    mask_nans = ismissing(tabDS.(target_col));
+    case_lib = tabDS(~mask_nans, :);
     
-
-    % NAO ESQUECER QUE len(case_lib) < len(tabDS2) !!!!
+    % NAO ESQUECER QUE len(case_lib) < len(tabDS) !!!!
     % POR ISSO E' ESTRITAMENTE NECESSARIO GUARDAR O IDX ORIGINAL ANTES DE
     % APLICAR A MASCARA mask_nans. DE OUTRA FORMA E' IMPOSSIVEL SABER O IDX
-    % NA TABELA ORIGINAL tabDS2.
-
+    % NA TABELA ORIGINAL tabDS.
 
     % uma vez criada a case_lib apaga a coluna (auxiliar)
-    tabDS2.original_idx = [];
+    tabDS.original_idx = [];
 
     % weighting_factors
     
@@ -132,17 +141,17 @@ for tab_name = transpose( keys(tabDS_dict) )
     fprintf(" >>> A preencher NaNs do TARGET - tabela %s\n", tab_name);
     fprintf(" ##############################################\n\n");
     
-    for i = 1:size(tabDS2,1)
+    for i = 1:size(tabDS,1)
         
         % se linha tem NaN no Target
-        if ismissing(tabDS2(i,target_col))
+        if ismissing(tabDS(i,target_col))
     
             fprintf("     CBR/Retrieve - Caso %i... \n", i);
         
             % devolve casos com similaridade acima do threshold (zero aqui)
             % case_lib(:,all_vars) nao manda a coluna original_idx para
             % prevenir erro no calculo que
-            [retrieved_idxs, retrieved_simil] = retrieve(case_lib(:,all_vars), tabDS2(i,:) , 0.0, weighting_factors);
+            [retrieved_idxs, retrieved_simil] = retrieve(case_lib(:,all_vars), tabDS(i,:) , 0.0, weighting_factors);
     
             % obtem max similaridade e idx da lista devolvida pelo Retrive
             [retrieved_max_simil, retrieved_max_simil_idx] = max(retrieved_simil);
@@ -151,21 +160,19 @@ for tab_name = transpose( keys(tabDS_dict) )
             % os idxs de case_lib_max_simil_idx = retrieved_max_simil_idx
             % se threshold = 0, diferente de outra forma
             case_lib_max_simil_idx = retrieved_idxs(retrieved_max_simil_idx);
-            tabDS2_max_simil_idx = case_lib.original_idx(case_lib_max_simil_idx);
+            tabDS_max_simil_idx = case_lib.original_idx(case_lib_max_simil_idx);
             
-            fprintf("     -> Similar com caso %i (sim = %.2f) \n\n", tabDS2_max_simil_idx, retrieved_max_simil);
+            fprintf("     -> Similar com caso %i (sim = %.2f) \n\n", tabDS_max_simil_idx, retrieved_max_simil);
 
             % atribui ao target(NaN) o valor do target do caso mais similar
-            tabDS2.(target_col){i} = case_lib.(target_col){case_lib_max_simil_idx};
+            tabDS_dict{tab_name}.(target_col){i} = case_lib.(target_col){case_lib_max_simil_idx};
     
         end
     
     end
     
-    % guarda tabela do dataset no dicionario
-    tabDS_dict{tab_name} = tabDS2;
 
-    writetable(tabDS2, output_folder_path + tab_name + "/out2" + "_" + name + "_IMPUTED_ORIG_" + tab_name + ".xlsx");
+    writetable(tabDS_dict{tab_name}, output_folder_path + tab_name + "/out2" + "_" + name + "_IMPUTED_ORIG_" + tab_name + ".xlsx");
     
     fprintf("\n #############################################\n\n");
 end
@@ -181,28 +188,35 @@ end
 
 for tab_name = transpose( keys(tabDS_dict) )
 
-    tabDS2 = tabDS_dict{tab_name};
+    tabDS = tabDS_dict{tab_name};
     
-    test = unique(tabDS2{:,target_col});
+    test = unique(tabDS{:,target_col});
     target_outputs = flip(string(test));
 
     for i = 1 : size(target_outputs,1)
         col_name = target_outputs(i);
-        tabDS2.(col_name) = double( strcmp( col_name, tabDS2.(target_col) ) );
+        tabDS.(col_name) = double( strcmp( col_name, tabDS.(target_col) ) );
     end
     
     % elimina a coluna class_cat/target_col
-    % tabDS2.(target_col) = [];
+    % tabDS.(target_col) = [];
 
     % RESCALING
-    % usamos o tabDS2{:, attr_cols} para normalizar apenas os atribrutos
-    cols_min  = min(tabDS2{:, att_cols});
-    cols_max  = max(tabDS2{:, att_cols});
-    tabParams = table(att_cols', cols_min', cols_max', 'VariableNames', {'Attribute', 'Min', 'Max'});
+    % usamos o tabDS{:, attr_cols} para normalizar apenas os atribrutos
+    cols_min  = min(tabDS{:, att_cols});
+    cols_max  = max(tabDS{:, att_cols});
+    
+    dictkeys = string(att_cols);
+    dict_att_min = dictionary(dictkeys, cols_min);
+    dict_att_max = dictionary(dictkeys, cols_max);
+    
+    tabDS{:, att_cols} = ( tabDS{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
 
-    tabDS2{:, att_cols} = ( tabDS2{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
+    % salva o dataset e os parametros
+    opath = output_folder_path + tab_name;
+    writetable(tabDS, opath + "/out3" + "_" + name + "_IMPUTED_NORM_" + tab_name + ".xlsx");
+    save(opath + "/out4" + "_" + name + "_NORM_PARAMS_" + tab_name + ".mat", 'dict_att_min', 'dict_att_max');
 
-    % salva as tabelas
-    writetable(tabDS2   , output_folder_path + tab_name + "/out3" + "_" + name + "_IMPUTED_NORM_" + tab_name + ".xlsx");
-    writetable(tabParams, output_folder_path + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_"   + tab_name + ".xlsx")
 end
+
+disp("Tarefa: TRATAMENTO DO DATASET --- Concluida sem erros")

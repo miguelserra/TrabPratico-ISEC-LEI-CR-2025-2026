@@ -33,12 +33,13 @@ function [retrieved_indexes, similarities] = tp_func_retrieve(case_lib, new_case
     sim_matrices_dic("sensor_status")     = get_sensor_status_similarities();
 
 
-    all_distances = zeros(num_cases, num_att);
+    
+    distances = zeros(num_cases, num_att);
     
     % calculo de distancias de attributos numericos
     for j = 1 : num_att-4
         att_name = att_names{j};
-        all_distances(:, j) = calc_lin_dist(case_lib.(att_name), new_case.(att_name));
+        distances(:, j) = calc_lin_dist(case_lib.(att_name), new_case.(att_name));
     end
 
     for j = num_att-3 : num_att
@@ -47,24 +48,25 @@ function [retrieved_indexes, similarities] = tp_func_retrieve(case_lib, new_case
         sim_matrix = sim_matrices_dic(att_name);
 
         % for i = 1 : num_cases
-        %     all_distances(i, j) = calc_local_dist( sim_matrix, ...
+        %     distances(i, j) = calc_local_dist( sim_matrix, ...
         %                                            case_lib{i, att_name}, ...
         %                                            new_case{1, att_name});
         % end
         
         % forma vetorizada mais rapida a calcular que o for-loop 
-        idx_cases   = double( case_lib{:, att_name} );
-        idx_newcase = double( new_case{1, att_name} );
+        idx_cases   = case_lib{:, att_name};
+        idx_newcase = new_case{1, att_name};
 
         sims_extraidas = sim_matrix.similarities(idx_cases, idx_newcase);
 
-        all_distances(:, j) = 1 - sims_extraidas;
+        distances(:, j) = 1 - sims_extraidas;
         
     end
 
-
-    weighted_distances = all_distances * transpose(weighting_factors);
-    final_similarities = 1 - (weighted_distances / sum(weighting_factors));
+    distances_1 = distances ./ max(distances);
+    weighted_distances = distances_1 * transpose(weighting_factors);
+    weighted_distances_norm = weighted_distances / sum(weighting_factors);
+    final_similarities = 1 - weighted_distances_norm;
     
     mask = final_similarities >= threshold;
     retrieved_indexes = find(mask);

@@ -2,9 +2,6 @@
 % SCRIPT AUXILIAR COM DADOS COMUNS %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% le o dataset para uma tabela/dataframe
-tabDS = readtable("../DADOS/" + name + ".csv");
-
 % colunas de atributos
 all_vars = string(tabDS.Properties.VariableNames);
 att_cols = all_vars(1:end-1);

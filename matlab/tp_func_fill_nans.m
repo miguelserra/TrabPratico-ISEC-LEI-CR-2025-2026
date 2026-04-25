@@ -15,7 +15,12 @@ function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols
         idx = find(strcmp(col_names, attr_col_name));
 
         if col_num_nans(idx) > 0
-            val_inicial = median(tabDS.(attr_col_name), 'omitnan'); % omitnan para nao considerar nans no calc
+            if ~any(categorical_attr_col == attr_col_name) %se nao forem as categoricas
+                val_inicial = median(tabDS.(attr_col_name), 'omitnan'); % omitnan para nao considerar nans no calc
+            else
+                val_inicial = mode(tabDS.(attr_col_name)); % para as categoricas usar moda
+            end
+
             tabDS.(attr_col_name)(mask_nans(:, idx)) = val_inicial;
         end
     end
