@@ -59,7 +59,7 @@ fprintf("\n\nTarefa: IMPLEMENTACAO DE CBR --- A Iniciar..\n\n");
 name = "dataset_TP";
 
 % nome da pasta de output (nao cria outputs se = "")
-output_folder = "";
+%output_folder = "";
 output_folder = "OUTPUT_3.2.a_CBR_IMPL";
 
 % importa o dataset - abre o original, nao o normalizado (so' para NN)
@@ -153,7 +153,7 @@ fprintf("\n[Retrieve] Lista de casos com similaridade acima de %.2f%%\n\n", simi
 disp(retrieved_cases_orig)
 
 if output_folder ~= ""
-    path = output_folder_path + "/out" + "_" + t_imput + "_"+ t_data + "_" + weighting_factors + ".xlsx";
+    path = output_folder_path + "/out_RETRIEVED_CASES_" + t_imput + "_"+ t_data + "_" + weighting_factors + ".xlsx";
     writetable(retrieved_cases_orig, path);
 end
 
@@ -190,9 +190,9 @@ disp(struct_new_case);
 %  RETAIN  %
 %%%%%%%%%%%%
 if output_folder ~= ""
-    path = output_folder_path + "/out" + "_" + t_imput + "_"+ t_data + "_" + "datasetTP_output_retain.xlsx";
+    path = output_folder_path + "/out" + "_" + t_imput + "_"+ t_data + "_" + "datasetTP_with_retained.xlsx";
     writetable(retrieved_cases_orig, path);
-    [case_library, option] = retain(case_library, new_case, path);
+    retain(tabCaseLib, struct_new_case, path);
 else
     fprintf("[Retain] Sem pasta de output definida. A sair...");
 end
