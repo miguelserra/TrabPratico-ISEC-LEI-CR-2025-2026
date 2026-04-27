@@ -1,127 +1,109 @@
-function [new_temperature] = tp_func_reuse(tabDS, tabNormParams, vibration, rotation_speed, voltage)
+function [new_temperature, ff_error] = tp_func_reuse(tabRetrievedCases, tabNewCase)
+  
+    % BASEADO NO CODIGO APRESENTADO EM
+    % https://www.instructables.com/Simple-Neural-Network-in-Matlab-for-Predicting-Sci/
+    % Modificoes inclui introduçao de Bias
+    % Não se fez set de validaçao porque temos apenas os poucos casos do CBR Retrieve
 
-    % Assume que tabDS vem normalizado!
-    vibration = tabNormParams()
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % SETUP REDE NEURONAL FEEDFORWARD %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    input_cols  = ["vibration","rotation_speed","voltage"];
+    output_cols = ["temperature"];
     
+
+    error_tol = 0.05;
     
-    %set non-random seed
+    hidden_layer_size = 3 ;  % tam camada intermedia calculada por 2/3*(N_out-N_inp)
+    alpha = 0.001          ;  % coef de aprendizagem
+    epochs = 10000        ;  % numero de epocas de treino
+
+    % non-random seed
     rng('default');
     rng(1);
+
     
-    % input data
-    filename = 'fertility_Diagnosis.txt';
-    delimiterIn = ',';
-    Data = importdata(filename,delimiterIn);
-        
-    % create training and testing matrices
-    [entries, attributes] = size(Data);
-    entries_breakpoint = round(entries*.90); %set breakpoint for training and testing data at 90% of dataset
-    inputlayersize = 9;
-    outputlayersize = attributes - inputlayersize;
+    %%%%%%%%%%
+    % SCRIPT %
+    %%%%%%%%%%
+
+    % Assume que tabRetrievedCases vem normalizada para os atributos numericos!
+    % caso algo se altere, devem ser normalizados aqui
+    inputs  = tabRetrievedCases{:,input_cols };
+    outputs = tabRetrievedCases{:,output_cols};
     
-    trainingdata = Data(1:entries_breakpoint,:); %truncate first 90% entries for training data
-    trainingdata_inputs = trainingdata(:,1:inputlayersize); %90%x9 matrix input training data
-    trainingdata_outputs = trainingdata(:,inputlayersize+1:end); %90:1 matrix output training data
+    input_layer_size  = length(input_cols);
+    output_layer_size = length(output_cols);
     
-    testingdata = Data(entries_breakpoint:end,:); %truncate last 10 entries for testing data
-    testingdata_inputs = testingdata(:,1:inputlayersize); %10:9 matrix input testing data
-    testingdata_outputs = testingdata(:,inputlayersize+1:end); %10:1 matrix output testing data  
-          
-    error_tolerance = 0.05;
-    hiddenlayersize = 7;
-    
-    %initialize random synapse weights AND biases with a mean of 0
-    syn0 = 2*rand(inputlayersize, hiddenlayersize) - 1; 
-    bias0 = 2*rand(1, hiddenlayersize) - 1; 
-    
-    syn1 = 2*rand(hiddenlayersize, outputlayersize) - 1; 
-    bias1 = 2*rand(1, outputlayersize) - 1; 
+    % iniciar pesos e bias com valores aleatorios
+    w0 = 2*rand(input_layer_size, hidden_layer_size) - 1; 
+    b0 = 2*rand(1, hidden_layer_size) - 1; 
+    w1 = 2*rand(hidden_layer_size, output_layer_size) - 1; 
+    b1 = 2*rand(1, output_layer_size) - 1; 
       
-    %feedforward untrained training data
-    layer0 = trainingdata_inputs;
-    layer1 = 1 ./ (1 + exp(-1 .* (layer0 * syn0 + bias0))); 
-    layer2 = 1 ./ (1 + exp(-1 .* (layer1 * syn1 + bias1))); 
-    
-    %check for accuracy
-    err = immse(layer2, trainingdata_outputs);
-    fprintf("Untrained: Mean Squared Error with Trainingdata: %f\n", err)
-    
-    %feedforward untrained testing data
-    layer0_test = testingdata_inputs;
-    layer1_test = 1 ./ (1 + exp(-1 .* (layer0_test * syn0 + bias0))); 
-    layer2_test = 1 ./ (1 + exp(-1 .* (layer1_test * syn1 + bias1))); 
-    
-    %check for accuracy
-    err_test = immse(layer2_test, testingdata_outputs);
-    fprintf("Untrained: Mean Squared Error with Testingdata: %f\n", err_test)
-    
-    %best alpha for fertilitydata = 0.001
-    for alpha = [0.001]
 
-        fprintf("Training with alpha: %f\n", alpha)
-        
-        for iter = 1:1000000
-            % feedforward
-            layer0 = trainingdata_inputs;
-            layer1 = 1 ./ (1 + exp(-1 .* (layer0 * syn0 + bias0))); 
-            layer2 = 1 ./ (1 + exp(-1 .* (layer1 * syn1 + bias1))); 
-    
-            % cost function (how much did we miss)
-            layer2_error = layer2 - trainingdata_outputs;
-    
-            % which direction is the target value (using optimized derivative: L*(1-L))
-            layer2_delta = layer2_error .* (layer2 .* (1 - layer2));
-    
-            % how much did each l1 value contribute to l2 error
-            layer1_error = layer2_delta * syn1.';
-    
-            % which direction is target l1 (using optimized derivative: L*(1-L))
-            layer1_delta = layer1_error .* (layer1 .* (1 - layer1));
-    
-            % adjust values (weights and biases)
-            errorval = mean(abs(layer2_error));
-            
-            syn1 = syn1 - alpha .* (layer1.' * layer2_delta);
-            syn0 = syn0 - alpha .* (layer0.' * layer1_delta);
-            
-            bias1 = bias1 - alpha .* sum(layer2_delta, 1);
-            bias0 = bias0 - alpha .* sum(layer1_delta, 1);
-            
+    for iter = 1:epochs
 
-            % pelos vistos a comunidade IA favorece o for+break em det do
-            % while-loop com dupla condiçao
-            if errorval < error_tolerance
-                fprintf("Stopping at: %f error\n", errorval)
-                break
-            end
-                
-            %print out debug data
-            if iter == 1 || mod(iter,100000) == 0
-                fprintf("\titer=%.0f, Error: %f\n", iter, errorval)
-            end      
-        end
+        % feedforward usando expressão do sigmoide
+        layer0 = inputs;
+        layer1 = 1 ./ (1 + exp(-1 .* (layer0 * w0 + b0))); 
+        layer2 = 1 ./ (1 + exp(-1 .* (layer1 * w1 + b1))); 
+
+        % regra delta
+        layer2_error = layer2 - outputs;
+
+        % delta local ( atraves da derivada da funcao sigmoide L*(1-L) ) 
+        layer2_delta = layer2_error .* (layer2 .* (1 - layer2));
+
+        % erro transferido para a layer1
+        layer1_error = layer2_delta * transpose(w1);
+
+        % delta local ( atraves da derivada da funcao sigmoide L*(1-L) )
+        layer1_delta = layer1_error .* (layer1 .* (1 - layer1));
+
+        % ajuste de pesos
+        error_val = mean(abs(layer2_error));
         
-        if errorval > error_tolerance
-            fprintf("Value Below Tolerance not found, please adjust alpha\n\n")
-        else
-            fprintf("Value Below Tolerance found: %f\n\n", errorval)
+        w1 = w1 - alpha .* (transpose(layer1) * layer2_delta);
+        w0 = w0 - alpha .* (transpose(layer0) * layer1_delta);
+        
+        b1 = b1 - alpha .* sum(layer2_delta, 1);
+        b0 = b0 - alpha .* sum(layer1_delta, 1);
+        
+
+        % pelos vistos a comunidade IA favorece o for+break em det do
+        % while-loop com dupla condiçao
+        if error_val < error_tol
+            break
         end
+            
     end
     
-    %feedforward trained training data
-    layer0 = trainingdata_inputs;
-    layer1 = 1 ./ (1 + exp(-1 .* (layer0 * syn0 + bias0))); 
-    layer2 = 1 ./ (1 + exp(-1 .* (layer1 * syn1 + bias1))); 
-    err = immse(layer2, trainingdata_outputs);
-    fprintf("Trained: Mean Squared Error with Trainingdata: %f\n", err)
-    
-    %feedforward trained testing data
-    layer0_test = testingdata_inputs;
-    layer1_test = 1 ./ (1 + exp(-1 .* (layer0_test * syn0 + bias0))); 
-    layer2_test = 1 ./ (1 + exp(-1 .* (layer1_test * syn1 + bias1))); 
-    err_test = immse(layer2_test, testingdata_outputs);
-    fprintf("Trained: Mean Squared Error with Testingdata: %f\n", err_test)
+    if error_val > error_tol
+        fprintf("Não foi encontrado erro abaixo da tolerancia. Alterar coef. de aprendizagem (alpha) ou tolerancia de erro.\n\n")
+    end
 
+
+    % calculo do erro
+    layer0 = inputs;
+    layer1 = 1 ./ (1 + exp(-1 .* (layer0 * w0 + b0))); 
+    layer2 = 1 ./ (1 + exp(-1 .* (layer1 * w1 + b1))); 
+    ff_error = mean((layer2(:) - outputs(:)).^2)*100;
+
+
+    % 1. Extrai os sensores do NOVO motor
+    new_input = tabNewCase{:, input_cols};
+    
+    % 2. Faz o Feedforward usando os pesos TREINADOS
+    layer1_new = 1 ./ (1 + exp(-1 .* (new_input * w0 + b0))); 
+    new_temperature = 1 ./ (1 + exp(-1 .* (layer1_new * w1 + b1))); 
+    
 
 end
+
+
+
+
 

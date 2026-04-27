@@ -1,7 +1,7 @@
-function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols)
+function tabCaseLib_dict = tp_func_fill_nans(tabCaseLib, categorical_attr_col, ignore_cols)
 
-    col_names = tabDS.Properties.VariableNames;
-    mask_nans = ismissing(tabDS);
+    col_names = tabCaseLib.Properties.VariableNames;
+    mask_nans = ismissing(tabCaseLib);
     
     % cria um dataframe sem a variavel de saida
     attr_cols = setdiff(col_names, ignore_cols, 'stable'); %'stable' mantem a ordem do array
@@ -16,19 +16,19 @@ function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols
 
         if col_num_nans(idx) > 0
             if ~any(categorical_attr_col == attr_col_name) %se nao forem as categoricas
-                val_inicial = median(tabDS.(attr_col_name), 'omitnan'); % omitnan para nao considerar nans no calc
+                val_inicial = median(tabCaseLib.(attr_col_name), 'omitnan'); % omitnan para nao considerar nans no calc
             else
-                val_inicial = mode(tabDS.(attr_col_name)); % para as categoricas usar moda
+                val_inicial = mode(tabCaseLib.(attr_col_name)); % para as categoricas usar moda
             end
 
-            tabDS.(attr_col_name)(mask_nans(:, idx)) = val_inicial;
+            tabCaseLib.(attr_col_name)(mask_nans(:, idx)) = val_inicial;
         end
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % OUTPUT 1 - dataset com nans substituidos por medianas %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    tabDS_median = tabDS;
+    tabCaseLib_median = tabCaseLib;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % criterios de paragem do MICE
@@ -44,7 +44,7 @@ function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols
         iter = iter + 1;
         
         % guardar a tabela para comparar variaçao
-        tabDS_old = tabDS{:, attr_cols};
+        tabCaseLib_old = tabCaseLib{:, attr_cols};
         
         % corre a regressao para cada coluna
         for i = 1:length(attr_cols)
@@ -65,32 +65,32 @@ function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols
             % regressao linear multipla
             % calcula coefs de y = sum(coef_i * x_i) + b
             % X_p e Y_p sao os Xs e Y dos conjunto de linhas completas
-            X_p = tabDS{mask_predict_rows, predict_cols};
-            Y_p = tabDS{mask_predict_rows, attr_col};
+            X_p = tabCaseLib{mask_predict_rows, predict_cols};
+            Y_p = tabCaseLib{mask_predict_rows, attr_col};
             X_p_1 = [ones(size(X_p, 1), 1), X_p]; 
             coefs = X_p_1 \ Y_p; %regressao aqui
         
             % X_p e Y_p sao os Xs e Y do set de treino
-            X_p = tabDS{mask_attr_rows, predict_cols};
+            X_p = tabCaseLib{mask_attr_rows, predict_cols};
             X_p_1 = [ones(size(X_p, 1), 1), X_p];
             Y_estim = X_p_1 * coefs;
             
             % verifica o maximo e minimo para nao ultrapassar esses valores e
             % arrededonda Y para o int ou (max ou min) das vars categoricas
             if ismember(attr_col, categorical_attr_col)
-                min_val = min(tabDS.(attr_col)(~mask_nans(:, idx_attr_col)));
-                max_val = max(tabDS.(attr_col)(~mask_nans(:, idx_attr_col)));
+                min_val = min(tabCaseLib.(attr_col)(~mask_nans(:, idx_attr_col)));
+                max_val = max(tabCaseLib.(attr_col)(~mask_nans(:, idx_attr_col)));
                 Y_estim = max(min(round(Y_estim), max_val), min_val);
             end
             
             % uma vez trabalhados os valores, atribui-se o resultado da
             % regressao às posiçoes com nan na coluna alvo
-            tabDS.(attr_col)(mask_attr_rows) = Y_estim;
+            tabCaseLib.(attr_col)(mask_attr_rows) = Y_estim;
         end
         
         % calcula convergencia
-        tabDS_new = tabDS{:, attr_cols};
-        delta_curr = max(max(abs(tabDS_new - tabDS_old)));
+        tabCaseLib_new = tabCaseLib{:, attr_cols};
+        delta_curr = max(max(abs(tabCaseLib_new - tabCaseLib_old)));
         delta_reg(iter) = delta_curr;
         
         fprintf('iter %i -> Delta: %.6f\n', iter, delta_curr);
@@ -109,10 +109,10 @@ function tabDS_dict = tp_func_fill_nans(tabDS, categorical_attr_col, ignore_cols
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % OUTPUT 2 - dataset com nans substituidos por MICE %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    tabDS_mice = tabDS;
+    tabCaseLib_mice = tabCaseLib;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
-    tabDS_dict = dictionary(["Median", "MICE"], {tabDS_median, tabDS_mice});
+    tabCaseLib_dict = dictionary(["Median", "MICE"], {tabCaseLib_median, tabCaseLib_mice});
 
 end

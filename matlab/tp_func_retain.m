@@ -1,32 +1,16 @@
-function [case_library] = tp_func_retain(case_library, new_case, journey_index)
+function tp_func_retain(tab_case_library, struct_new_case, output_path)
 
-    journey = max(case_library{:, 1}) + 1;
-    hotel = case_library{journey_index, 10};
+    tab_new_case = struct2table(struct_new_case);
+    tab_case_library = [tab_case_library; tab_new_case];
 
-    new_row = {journey, new_case.holiday_type, new_case.price, new_case.number_persons, ...
-                        new_case.region, new_case.transportation, new_case.duration, new_case.season, ...
-                        new_case.accommodation, hotel};
+           
+   fprintf('Adicionar novo caso ao dataset? (y/n)\n');
+   option = input('Option: ', 's');
 
-    case_library = [case_library; new_row];
-            
-    fprintf('Add the new case to the library? (y/n)\n');
-    option = input('Option: ', 's');
+   if option == 'y' || option == 'Y'    
+       
+       writetable(tab_case_library, output_path); 
 
-    if option == 'y' || option == 'Y'    
-        
-        load('regions');
-        
-        keys = regions_positions.keys;
-        keys{size(keys,2) + 1} = new_case.region;
-        
-        values = regions_positions.values;
-        values{size(values,2) + 1} = new_case.latlon;
-        
-        regions_positions = containers.Map(keys, values);
-    
-        save('regions', 'regions_positions')
-        
-        writetable(case_library, 'TravelCaseBase.csv'); 
-    end
+   end
 end
 
