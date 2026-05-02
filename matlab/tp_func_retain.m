@@ -9,8 +9,8 @@ function tp_func_retain(tab_case_library, struct_new_case, output_path)
 
    if option == 'y' || option == 'Y'    
        
-       writetable(tab_case_library, output_path); 
-
+        writetable(tab_case_library, output_path); 
+        fprintf("[Retain] Novo dataset guardado com exito.\n\n");
    end
 end
 

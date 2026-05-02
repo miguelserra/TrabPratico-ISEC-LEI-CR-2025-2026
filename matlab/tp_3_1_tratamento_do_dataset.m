@@ -207,7 +207,7 @@ for tab_name = transpose( keys(tabCaseLib_dict) )
     % tabCaseLib.(target_col) = [];
 
     % RESCALING
-    % usamos o tabCaseLib{:, attr_cols} para normalizar apenas os atribrutos
+    % calculo dos parametros de rescaling (min e max de cada coluna)
     cols_min  = min(tabCaseLib{:, att_cols});
     cols_max  = max(tabCaseLib{:, att_cols});
     
@@ -215,12 +215,9 @@ for tab_name = transpose( keys(tabCaseLib_dict) )
     dict_att_min = dictionary(dictkeys, cols_min);
     dict_att_max = dictionary(dictkeys, cols_max);
     
-    tabCaseLib{:, att_cols} = ( tabCaseLib{:, att_cols} - cols_min ) ./ (cols_max - cols_min);
-
-    % salva o dataset e os parametros
-    outpath = output_folder_path + tab_name;
-    writetable(tabCaseLib, outpath + "/out3" + "_" + name + "_IMPUTED_NORM4NN_" + tab_name + ".xlsx");
-    save(outpath + "/out4" + "_" + name + "_NORM_PARAMS_" + tab_name + ".mat", 'dict_att_min', 'dict_att_max');
+    % salva os parametros de normalização
+    outfilepath = output_folder_path + tab_name + "/out4" + "_" + name + "_NORM_PARAMS_" + tab_name + ".mat";
+    save(outfilepath , 'dict_att_min', 'dict_att_max');
 
 end
 

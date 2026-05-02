@@ -40,13 +40,9 @@ weighting_factors = "w";
 %                        !!! IMPORTANTE !!!                        %
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-retrieve         = @tp_func_retrieve        ;
-reuse            = @tp_func_reuse           ;
-revise           = @tp_func_revise          ;
-retain           = @tp_func_retain          ;
-get_file         = @tp_func_get_xlfile      ;
-normalize_values = @tp_func_rescale         ;
-denorm_values    = @tp_func_rescale_reverse ;
+
+get_file = @tp_func_get_xlfile  ;
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -54,14 +50,14 @@ denorm_values    = @tp_func_rescale_reverse ;
 %%%%%%%%%%%%%%%%%%%%%%%
 
 clc;
-fprintf("\n\nTarefa: IMPLEMENTACAO DE CBR --- A Iniciar..\n\n");
+fprintf("\n\nTarefa: IMPLEMENTACAO DE REDES NEURONAIS --- A Iniciar..\n\n");
 
 % nome do ficheiro do dataset de teste
 name = "dataset_TP";
 
 % nome da pasta de output (nao cria outputs se = "")
 %output_folder = "";
-output_folder = "OUTPUT_3.2.a_CBR_IMPL";
+output_folder = "OUTPUT_3.3.a_NN_IMPL";
 
 % importa o dataset - abre o original, nao o normalizado (so' para NN)
 wildcard = "*_TRATAM*/*" + type_imput + "/*_ORIG_*.xlsx";
@@ -119,10 +115,11 @@ tabNewCase = struct2table(struct_new_case, 'AsArray', true);
 
 if type_data == "NORM"
     % rescaling do novo caso para os valores continuos
-    cols_min   = dict_att_min(num_att_cols);
-    cols_max   = dict_att_max(num_att_cols);
-    tabCaseLib{:, num_att_cols} = normalize_values(tabCaseLib{:, num_att_cols}, cols_min, cols_max);
-    tabNewCase{:, num_att_cols} = normalize_values(tabNewCase{:, num_att_cols}, cols_min, cols_max);
+    col_min = dict_att_min(num_att_cols);
+    col_max = dict_att_max(num_att_cols);
+
+    tabCaseLib{:, num_att_cols} = (tabCaseLib{:, num_att_cols} - col_min) ./ (col_max - col_min);
+    tabNewCase{:, num_att_cols} = (tabNewCase{:, num_att_cols} - col_min) ./ (col_max - col_min);
 end
 
 
@@ -153,7 +150,7 @@ fprintf("\n[Retrieve] Lista de casos com similaridade acima de %.2f%%\n\n", simi
 disp(retrieved_cases_orig)
 
 if output_folder ~= ""
-    path = output_folder_path + "/out_RETRIEVED_CASES_" + type_imput + "_"+ type_data + "_" + weighting_factors + ".xlsx";
+    path = output_folder_path + "/out_RETRIEVED_CASES_" + t_imput + "_"+ t_data + "_" + weighting_factors + ".xlsx";
     writetable(retrieved_cases_orig, path);
 end
 
@@ -166,7 +163,7 @@ end
 
 tmax = col_max(1);
 tmin = col_min(1);
-new_temp_orig = denorm_values(new_temp_norm, tmin, tmax);
+new_temp_orig = new_temp_norm * (tmax - tmin) + tmin;
 
 fprintf("\n[Reuse] Temperatura prevista para o Novo Caso é = %.3fºC (MSError_treino= %.3f%%)\n\n", new_temp_orig, ff_error);
 
@@ -190,7 +187,7 @@ disp(struct_new_case);
 %  RETAIN  %
 %%%%%%%%%%%%
 if output_folder ~= ""
-    path = output_folder_path + "/out" + "_" + type_imput + "_"+ type_data + "_" + "datasetTP_with_retained.xlsx";
+    path = output_folder_path + "/out" + "_" + t_imput + "_"+ t_data + "_" + "datasetTP_with_retained.xlsx";
     writetable(retrieved_cases_orig, path);
     retain(tabCaseLib, struct_new_case, path);
 else

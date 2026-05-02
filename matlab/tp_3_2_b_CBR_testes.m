@@ -4,8 +4,10 @@
 %                        !!! IMPORTANTE !!!                        %
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-retrieve = @tp_func_retrieve;
-get_file = @tp_func_get_xlfile;
+retrieve         = @tp_func_retrieve        ;
+get_file         = @tp_func_get_xlfile      ;
+normalize_values = @tp_func_rescale         ;
+denorm_values    = @tp_func_rescale_reverse ;
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % PREPARAÇAO DE DADOS %
@@ -89,9 +91,8 @@ for t_imput = type_imput
             % so os attributos numericos senao da' cabo das matrizes sim
             col_min = dict_att_min(num_att_cols);
             col_max = dict_att_max(num_att_cols);
-
-            tabCaseLib{:, num_att_cols} = (tabCaseLib{:, num_att_cols} - col_min) ./ (col_max - col_min);
-            tabCaseLib_T{:, num_att_cols} = (tabCaseLib_T{:, num_att_cols} - col_min) ./ (col_max - col_min);
+            tabCaseLib{:, num_att_cols} = normalize_values(tabCaseLib{:, num_att_cols}, cols_min, cols_max);
+            tabNewCase{:, num_att_cols} = normalize_values(tabNewCase{:, num_att_cols}, cols_min, cols_max);
         end
         
         for t_wf = transpose( keys(weighting_factors) )   
