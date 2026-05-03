@@ -89,10 +89,10 @@ for t_imput = type_imput
         if t_data == "NORM"
             % rescale dos datasets treino e de teste (apenas att numericos)
             % so os attributos numericos senao da' cabo das matrizes sim
-            col_min = dict_att_min(num_att_cols);
-            col_max = dict_att_max(num_att_cols);
+            cols_min = dict_att_min(num_att_cols);
+            cols_max = dict_att_max(num_att_cols);
             tabCaseLib{:, num_att_cols} = normalize_values(tabCaseLib{:, num_att_cols}, cols_min, cols_max);
-            tabNewCase{:, num_att_cols} = normalize_values(tabNewCase{:, num_att_cols}, cols_min, cols_max);
+            tabCaseLib_T{:, num_att_cols} = normalize_values(tabCaseLib_T{:, num_att_cols}, cols_min, cols_max);
         end
         
         for t_wf = transpose( keys(weighting_factors) )   
