@@ -183,28 +183,14 @@ end
 
 
 %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PREPARA DATASETS PARA REDES NEURONAIS %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+% PREPARA NORMALIZAÇAO %
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 for tab_name = transpose( keys(tabCaseLib_dict) )
 
     tabCaseLib = tabCaseLib_dict{tab_name};
-    
-    % % Transforma a coluna do target em 3 colunas binarias com o nome de cada
-    % % saida possivel e aplica rescalling
-
-    % test = unique(tabCaseLib{:,target_col});
-    % target_outputs = flip(string(test));
-
-    % for i = 1 : size(target_outputs,1)
-    %     col_name = target_outputs(i);
-    %     tabCaseLib.(col_name) = double( strcmp( col_name, tabCaseLib.(target_col) ) );
-    % end
-    
-    % elimina a coluna class_cat/target_col
-    % tabCaseLib.(target_col) = [];
 
     % RESCALING
     % calculo dos parametros de rescaling (min e max de cada coluna)

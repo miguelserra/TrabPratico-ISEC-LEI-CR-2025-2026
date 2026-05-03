@@ -16,9 +16,9 @@ function [new_temperature, ff_error] = tp_func_reuse(tabRetrievedCases, tabNewCa
 
     error_tol = 0.05;
     
-    hidden_layer_size = 3 ;  % tam camada intermedia calculada por 2/3*(N_out-N_inp)
-    alpha = 0.001          ;  % coef de aprendizagem
-    epochs = 10000        ;  % numero de epocas de treino
+    hidden_layer_size = 3       ;  % tam camada intermedia calculada por 2/3*(N_out-N_inp)
+    alpha             = 0.001   ;  % coef de aprendizagem
+    epochs            = 10000   ;  % numero de epocas de treino
 
     % non-random seed
     rng('default');
@@ -93,10 +93,10 @@ function [new_temperature, ff_error] = tp_func_reuse(tabRetrievedCases, tabNewCa
     ff_error = mean((layer2(:) - outputs(:)).^2)*100;
 
 
-    % 1. Extrai os sensores do NOVO motor
+    % extrai os sensores do NOVO motor
     new_input = tabNewCase{:, input_cols};
     
-    % 2. Faz o Feedforward usando os pesos TREINADOS
+    % faz o Feedforward usando os pesos TREINADOS
     layer1_new = 1 ./ (1 + exp(-1 .* (new_input * w0 + b0))); 
     new_temperature = 1 ./ (1 + exp(-1 .* (layer1_new * w1 + b1))); 
     
