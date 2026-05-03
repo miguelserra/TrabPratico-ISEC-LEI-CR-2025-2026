@@ -9,7 +9,7 @@ t_imput   = "MICE"              ; % tipo de imputaçao de fill nans
 t_data = "NORM" ; % tipos de dados - originais ou normalizado
 
 % parametros quanto à topologia das redes neuronais
-topology = {10; [5 5]; 6; [3 3]; 12; [6 6]; [4 4 4]} ;  
+topology = {10; [5 5]; [7 3]; 6; [3 3]; 12; [6 6]; [8 4]; [4 4 4]} ;  
 
 % parametros de treino 
 training_fun   = ["trainlm", "trainbfg", "traingd"];
@@ -19,6 +19,13 @@ transf_fun_out = ["purelin", "logsig" ];
 % proporçoes de treino/validaçao/teste
 data_split_proportions = {[0.7 0.15 0.15], [0.7 0.2 0.1], [0.9 0.05 0.05]};
 
+% numero de epocas
+% nao vale a pena variar neste script. o matlab corta antes. Caso contrario 
+num_epochs = [20 1000];
+
+% coef de aprendizagem
+%learn_rates = [0.01, 0.05, 0.1]; 
+% Nao foi adotada a variacao porque e' diferente para cada funçao de  treino
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HANDLES DE FUNCOES                                               %
@@ -98,8 +105,7 @@ nn_case.type_data = t_data;
 nn_case.input_layer  = tabCaseLib{:,att_cols};
 nn_case.output_layer = tabCaseLib{:,target_outputs};
 
-results_lst = {};
-results_idx = 0; %incrementada antes de ser usada
+case_list = {};
 for topo = transpose(topology)
     nn_case.topology = cell2mat(topo);
 
@@ -114,41 +120,15 @@ for topo = transpose(topology)
                 
                 for proportions = data_split_proportions
                     nn_case.data_split = cell2mat(proportions);
-                    
-                    nn_case.case_name = gen_case_name(nn_case);
-                    
-                    sum_acc_val = 0;
-                    sum_acc_test = 0;
-                    num_runs = 10;
-                    for i = 1 : num_runs
-                        nn_case.num_run = i;
-                        [~, acc_val, acc_test] = nn_ff(nn_case, true, false);
-                        sum_acc_val = sum_acc_val + acc_val;
-                        sum_acc_test = sum_acc_test + acc_test;
-                    end
 
-                    avg_acc_val = sum_acc_val / num_runs;
-                    avg_acc_test = sum_acc_test / num_runs;
-                    
-                    % escreve numa tabelea os resultados
-                    topo_str = mat2str(nn_setup.topology);
-                    split_str = mat2str(nn_setup.data_split);
+                    for num_e = num_epochs
+                        nn_case.num_epochs = num_e;
+                        
+                        nn_case.case_name = gen_case_name(nn_case);
+                        case_list{end+1} = nn_case;   
 
-                    results_idx = results_idx + 1;
-                    results_lst(results_idx, :) = {   ...
-                                                        nn_setup.case_name, ...
-                                                        nn_setup.type_imp, ...
-                                                        nn_setup.type_data, ...
-                                                        topo_str, ...
-                                                        nn_setup.training_fun, ...
-                                                        nn_setup.transf_fun_hid, ...
-                                                        nn_setup.transf_fun_out, ...
-                                                        split_str, ...
-                                                        avg_acc_val, ...
-                                                        avg_acc_test ...
-                                                     };
-                    
-                    
+                    end                      
+
                 end
             end
         end
@@ -156,9 +136,62 @@ for topo = transpose(topology)
 
 end
 
+
+
+num_cases = length(case_list);
+fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise...\n", num_cases);
+
+
+
+% paralelizaçao dos fors para acelerar / corre sem toolbox 
+results_lst = cell(num_cases, 13);
+parfor i = 1:num_cases
+    
+    curr_nn = case_list{i}; 
+    
+    % corre caso 10 vezes e calcula as medias
+    sum_acc_glob = 0; sum_acc_test = 0; sum_err_glob = 0; sum_err_test = 0;
+    num_runs = 10;
+    for n = 1 : num_runs
+        curr_nn.num_run = n;
+        [nn_ff_out] = nn_ff(curr_nn, true, false);
+        sum_acc_glob = sum_acc_glob + nn_ff_out.acc_glob;
+        sum_acc_test = sum_acc_test + nn_ff_out.acc_test;
+        sum_err_glob = sum_err_glob + nn_ff_out.err_glob;
+        sum_err_test = sum_err_test + nn_ff_out.err_test;
+    end
+    
+    avg_acc_glob = sum_acc_glob / num_runs;
+    avg_acc_test = sum_acc_test / num_runs;
+    avg_err_glob = sum_err_glob / num_runs;
+    avg_err_test = sum_err_test / num_runs;
+    
+    topo_str  = mat2str(curr_nn.topology);
+    split_str = mat2str(curr_nn.data_split);
+    
+    results_lst(i, :) = {                           ...
+                            curr_nn.case_name,      ...
+                            curr_nn.type_imp,       ...
+                            curr_nn.type_data,      ...
+                            topo_str,               ...
+                            curr_nn.training_fun,   ...
+                            curr_nn.transf_fun_hid, ...
+                            curr_nn.transf_fun_out, ...
+                            curr_nn.num_epochs,     ...
+                            split_str,              ...
+                            avg_err_glob,           ...
+                            avg_err_test,           ...
+                            avg_acc_glob,           ...
+                            avg_acc_test            ...
+                        };
+
+end
+
+
 res_col_names = {'Case_Name', 'Imputacao', 'Dados', 'Topologia', ...
-                 'Treino_Func', 'Transf_Hid', 'Transf_Out', ...
-                 'Divisao_Dados', 'Media_Acc_Validacao', 'Media_Acc_Teste'};
+                 'Treino_Func', 'Transf_Hid', 'Transf_Out', 'Num_Epocas' ...
+                 'Divisao_Dados', 'Media_Err_Global', 'Media_Err_Teste',...
+                 'Media_Acc_Global', 'Media_Acc_Teste'};
             
 
 tab_results = cell2table(results_lst, 'VariableNames', res_col_names);
@@ -176,14 +209,13 @@ function [name] = gen_case_name(nn)
         name = name + "-" + n;
     end
     
-    name = name + "_Train-" + nn.training_fun;
+    name = name + "_" + nn.training_fun;
+    name = name + "_HLy-" + nn.transf_fun_hid;
+    name = name + "_OLy-" + nn.transf_fun_out;
+    name = name + "_EP" + nn.num_epochs + "_Div";
 
-    name = name + "_TransfHid-" + nn.transf_fun_hid;
-
-    name = name + "_TransfOut-" + nn.transf_fun_out + "_Prop";
-    
-    %proportions
     for n = nn.data_split
         name = name + "-" + n;
     end
+
 end

@@ -1,13 +1,11 @@
-function [net, acc_val, acc_test] = tp_func_feedforwardNN(neural_network_setup, hidden_calc, print_figs)
+function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hidden_calc, print_figs)
     
     %%%%%%%%%
     % SETUP %
     %%%%%%%%%
     
-    case_name = neural_network_setup.case_name + "_R-" + neural_network_setup.num_run;
+    case_name = neural_network_setup.case_name + "_R" + neural_network_setup.num_run;
     
-    fprintf("\nA correr: %s\n", case_name)
-
     % bloquear  
     if hidden_calc
         set(0, 'DefaultFigureVisible', 'off');
@@ -26,6 +24,8 @@ function [net, acc_val, acc_test] = tp_func_feedforwardNN(neural_network_setup, 
     net = feedforwardnet(   neural_network_setup.topology, ...
                             neural_network_setup.training_fun   );
     
+    net.trainParam.epochs = neural_network_setup.num_epochs;
+
     % divisao do dataset
     net.divideFcn = 'dividerand'; % por defeito, p/ todos os casos
     net.divideParam.trainRatio = neural_network_setup.data_split(1);
@@ -54,30 +54,17 @@ function [net, acc_val, acc_test] = tp_func_feedforwardNN(neural_network_setup, 
     
     out_val  = sim(net, inp_layer);
     
-    if print_figs
-        plotconfusion(out_layer, out_val);
-        fig_conf = gcf;
-        conf_mat_path = "PlotConfusao_"+ case_name + ".png" ;
-        exportgraphics(fig_conf, conf_mat_path, 'Resolution', 300);
-        close(fig_conf);
-
-        plotperf(tr);
-        fig_perf = gcf;
-        perf_path = "PlotPerform_"+ case_name + ".png" ;
-        exportgraphics(fig_perf, perf_path, 'Resolution', 300);
-        close(fig_perf);
-    end
-
-    inp_layer_val = inp_layer(:, tr.valInd);
-    out_layer_val = out_layer(:, tr.valInd);
-    out_val = sim(net, inp_layer_val);
+    error_glob = perform(net, out_val, out_layer);
+    acc_glob   = accuracy(out_val, out_layer);
     
-    error_val = perform(net, out_val, out_layer_val);
-    acc_val   = accuracy(out_val, out_layer_val);
-
-    fprintf("\nErro na classificaçao (fase de validaçao) = %f\n", error_val);
-    fprintf("Precisao total (fase de validaçao) = %f\n", acc_val);
-
+    neural_network_setup.err_glob   = error_glob;
+    neural_network_setup.acc_glob   = acc_glob;
+    
+    if ~hidden_calc
+        fprintf("\nA correr: %s\n", case_name);
+        fprintf("\nErro na classificaçao (fase de validaçao) = %f\n", error_glob);
+        fprintf("Precisao total (fase de validaçao) = %f\n", acc_glob);
+    end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % VALIDAÇAO FINAL VS SUB-DATSET DE TESTE %
@@ -88,10 +75,30 @@ function [net, acc_val, acc_test] = tp_func_feedforwardNN(neural_network_setup, 
 
     out_test = sim(net, inp_layer_test);
 
+    if print_figs
+        plotconfusion(out_layer_test, out_test); 
+        fig_conf = gcf;
+        conf_mat_path = "PlotConfusao_Teste_"+ case_name + ".png" ;
+        exportgraphics(fig_conf, conf_mat_path, 'Resolution', 300);
+        close(fig_conf);
+
+        plotperf(tr);
+        fig_perf = gcf;
+        perf_path = "PlotPerform_"+ case_name + ".png" ;
+        exportgraphics(fig_perf, perf_path, 'Resolution', 300);
+        close(fig_perf);
+    end
+
     error_test = perform(net, out_test, out_layer_test);
     acc_test   = accuracy(out_test, out_layer_test);
-    fprintf('\nErro na classificaçao (fase de teste) = %f\n', error_test)
-    fprintf("Precisao total (fase de teste) = %f\n", acc_test)
+
+    neural_network_setup.err_test   = error_test;
+    neural_network_setup.acc_test   = acc_test;
+    
+    if ~hidden_calc
+        fprintf('\nErro na classificaçao (fase de teste) = %f\n', error_test)
+        fprintf("Precisao total (fase de teste) = %f\n", acc_test)
+    end
 
     % reativa plot de figuras
     set(0, 'DefaultFigureVisible', 'on');
