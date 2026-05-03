@@ -54,7 +54,7 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     
     out_val  = sim(net, inp_layer);
     
-    error_glob = perform(net, out_val, out_layer);
+    error_glob = perform(net, out_val, out_layer) * 100;
     acc_glob   = accuracy(out_val, out_layer);
     
     neural_network_setup.err_glob   = error_glob;
@@ -92,7 +92,7 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     error_test = perform(net, out_test, out_layer_test);
     acc_test   = accuracy(out_test, out_layer_test);
 
-    neural_network_setup.err_test   = error_test;
+    neural_network_setup.err_test   = error_test * 100;
     neural_network_setup.acc_test   = acc_test;
     
     if ~hidden_calc

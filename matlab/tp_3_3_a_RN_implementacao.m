@@ -139,7 +139,7 @@ end
 
 
 num_cases = length(case_list);
-fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise...\n", num_cases);
+fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise! Aguarde por favor, vai demorar um pouco ...", num_cases);
 
 
 
@@ -196,7 +196,7 @@ res_col_names = {'Case_Name', 'Imputacao', 'Dados', 'Topologia', ...
 
 tab_results = cell2table(results_lst, 'VariableNames', res_col_names);
 excel_out = output_folder_path + "Resultados_Estudo_Parametrico.xlsx";
-writetable(tab_results, ficheiro_excel_out);
+writetable(tab_results, excel_out);
 
 fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
 
