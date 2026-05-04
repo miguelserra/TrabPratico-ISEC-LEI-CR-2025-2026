@@ -38,16 +38,6 @@ tp_3_0_setup_common;
 %       output_folder_path
 %       time
 
-% le o dataset de teste para uma tabela/dataframe
-wildcard = "*_TRATAM*/Common/*_num.xlsx";
-ds_file_path = get_file(wildcard);
-tabCaseLib = readtable(ds_file_path);
-
-% le o dataset de teste para uma tabela/dataframe
-wildcard = "*_TRATAM*/Common/*_test_num.xlsx";
-ds_file_path = get_file(wildcard);
-tabCaseLib_T_base = readtable(ds_file_path);
-
 mkdir(output_folder_path + "Common/")
 mkdir(output_folder_path + "Median/")
 mkdir(output_folder_path + "MICE/")
@@ -67,6 +57,11 @@ weighting_factors = dictionary(  ["w", "w2", "1s" , "soCat"]        , ...
 %%%%%%%%%%%%%%
 % SCRIPT CBR %
 %%%%%%%%%%%%%%
+
+% le o dataset de teste para uma tabela/dataframe
+wildcard = "*_TRATAM*/Common/*_test_num.xlsx";
+ds_file_path = get_file(wildcard);
+tabCaseLib_T_base = readtable(ds_file_path);
 
 % usamos sempre o ficheiro sem normalizaçao e aplicamos o rescaling
 % utilizando o ficheiro de parametros gerado para cada type_imput
@@ -185,6 +180,7 @@ grid on;
 
 legend({'Taxa de Acerto', 'Similaridade Media'}, 'Location', 'southoutside', 'NumColumns', 2);
 grid on;
+grid minor;
 
 file_name = output_folder_path + "Common/plot_Resumo_Testes_CBR.png";
 exportgraphics(fig_cbr, file_name, 'Resolution', 300);

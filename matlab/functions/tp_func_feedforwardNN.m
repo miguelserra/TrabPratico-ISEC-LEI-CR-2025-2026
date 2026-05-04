@@ -4,7 +4,7 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     % SETUP %
     %%%%%%%%%
     
-    case_name = neural_network_setup.case_name + "_R" + neural_network_setup.num_run;
+    case_name = neural_network_setup.case_name + "_R" + neural_network_setup.rep_num;
     
     % bloquear  
     if hidden_calc
@@ -77,16 +77,7 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
 
     if print_figs
         plotconfusion(out_layer_test, out_test); 
-        fig_conf = gcf;
-        conf_mat_path = "PlotConfusao_Teste_"+ case_name + ".png" ;
-        exportgraphics(fig_conf, conf_mat_path, 'Resolution', 300);
-        close(fig_conf);
-
         plotperf(tr);
-        fig_perf = gcf;
-        perf_path = "PlotPerform_"+ case_name + ".png" ;
-        exportgraphics(fig_perf, perf_path, 'Resolution', 300);
-        close(fig_perf);
     end
 
     error_test = perform(net, out_test, out_layer_test);

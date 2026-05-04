@@ -23,6 +23,9 @@ data_split_proportions = {[0.7 0.15 0.15], [0.7 0.2 0.1], [0.9 0.05 0.05]};
 % nao vale a pena variar neste script. o matlab corta antes. Caso contrario 
 num_epochs = [20 1000];
 
+% numero de repetiçoes por caso
+num_reps_nn = 30;
+
 % coef de aprendizagem
 %learn_rates = [0.01, 0.05, 0.1]; 
 % Nao foi adotada a variacao porque e' diferente para cada funçao de  treino
@@ -37,7 +40,7 @@ get_file         = @tp_func_get_xlfile      ;
 normalize_values = @tp_func_rescale         ;
 denorm_values    = @tp_func_rescale_reverse ;
 nn_ff            = @tp_func_feedforwardNN   ;
-
+categ2cols       = @tp_func_categ2cols      ;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -49,9 +52,6 @@ clc;
 rng('shuffle', 'twister'); % força uma randomizaçao eficaz
 
 fprintf("\n\nTarefa: IMPLEMENTACAO DE REDES NEURONAIS --- A Iniciar..\n\n");
-
-% nome do ficheiro do dataset de teste
-name = "dataset_TP";
 
 % nome da pasta de output
 output_folder = "OUTPUT_3.3.a_RN_IMPL";
@@ -84,15 +84,8 @@ tp_3_0_setup_common;
 %       output_folder_path
 %       time
 
-% Transforma a coluna do target em 3 colunas binarias 
-unique_outputs = unique(tabCaseLib{:,target_col});
-target_outputs = flip(string(unique_outputs));
-for col_name = transpose(target_outputs)
-    tabCaseLib.(col_name) = double( strcmp( col_name, tabCaseLib.(target_col) ) );
-end
-
-% elimina a coluna class_cat/target_col
-tabCaseLib.(target_col) = [];
+% Transforma a coluna do target em 3 colunas binarias (num de outputs)
+[tabCaseLib, target_outputs] = categ2cols(tabCaseLib, target_col);
 
 
 if t_data == "NORM"
@@ -149,37 +142,36 @@ fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise! Aguarde por fav
 
 % paralelizaçao dos fors para acelerar / corre sem toolbox 
 results_lst = cell(num_cases, 13);
-net_lst = cell(num_cases, 1);
+%net_lst = cell(num_cases, 1);
 parfor i = 1:num_cases
     
     curr_nn = case_list{i}; 
     
-    % corre caso "num_runs" vezes e calcula as medias
+    % corre caso "num_reps_nn" vezes e calcula as medias
     sum_acc_glob = 0; sum_acc_test = 0; sum_err_glob = 0; sum_err_test = 0;
-    num_runs = 10;
     best_err_nn = Inf;
     best_nn = [];
-    for n = 1 : num_runs
+    for n = 1 : num_reps_nn
 
-        curr_nn.num_run = n;
+        curr_nn.rep_num = n;
         [nn_ff_out] = nn_ff(curr_nn, true, false);
         sum_acc_glob = sum_acc_glob + nn_ff_out.acc_glob;
         sum_acc_test = sum_acc_test + nn_ff_out.acc_test;
         sum_err_glob = sum_err_glob + nn_ff_out.err_glob;
         sum_err_test = sum_err_test + nn_ff_out.err_test;
         
-        % guarda a melhor rede das "num_runs"
-        if nn_ff_out.err_test < best_err_nn
-            best_err_nn = nn_ff_out.err_test;
-            best_nn = nn_ff_out.net;
-        end
+        % guarda a melhor rede das "num_reps_nn"
+        %if nn_ff_out.err_test < best_err_nn
+        %    best_err_nn = nn_ff_out.err_test;
+        %    best_nn = nn_ff_out.net;
+        %end
     end
     
     % calcula as medias
-    avg_acc_glob = sum_acc_glob / num_runs;
-    avg_acc_test = sum_acc_test / num_runs;
-    avg_err_glob = sum_err_glob / num_runs;
-    avg_err_test = sum_err_test / num_runs;
+    avg_acc_glob = sum_acc_glob / num_reps_nn;
+    avg_acc_test = sum_acc_test / num_reps_nn;
+    avg_err_glob = sum_err_glob / num_reps_nn;
+    avg_err_test = sum_err_test / num_reps_nn;
     
     topo_str  = mat2str(curr_nn.topology);
     split_str = mat2str(curr_nn.data_split);
@@ -219,17 +211,17 @@ fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
 
 % adiciona a lista de redes 'a tab_results e ordena a lista por mair para
 % menor precisao e, como criterio de desempate, o erro (MSE) do menor para
-% o menor obtendo-se a tabela tab_results_sorted
-tab_results.net = net_lst;
-tab_results_sorted = sortrows(tab_results, {'Media_Acc_Teste', 'Media_Err_Teste'}, {'descend', 'ascend'});
-
+% o maior obtendo-se a tabela tab_results_sorted
+%tab_results.net = net_lst;
+%tab_results_sorted = sortrows(tab_results, {'Media_Acc_Teste', 'Media_Err_Teste'}, {'descend', 'ascend'});
+%
 % extrai os 3 melhores e os 3 piores
-results_top3 = tab_results_sorted(1:3, {'Case_Name', 'net'});
-results_bot3 = tab_results_sorted(end-2:end, {'Case_Name', 'net'});
+%neural_networks_top3 = tab_results_sorted(1:3, {'Case_Name', 'net'});
+%neural_networks_bot3 = tab_results_sorted(end-2:end, {'Case_Name', 'net'});
 
 % grava na pasta
-file_out = output_folder_path + "RN_3melhores_e_3piores.mat";
-save(file_out, 'results_top3', 'results_bot3');
+%file_out = output_folder_path + "RN_3melhores_e_3piores.mat";
+%save(file_out, 'neural_networks_top3', 'neural_networks_bot3');
 
 
 function [name] = gen_case_name(nn)
