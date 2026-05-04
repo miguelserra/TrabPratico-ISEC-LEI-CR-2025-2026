@@ -218,7 +218,7 @@ fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
 % adiciona a lista de redes 'a tab_results e ordena a lista por mair para
 % menor precisao e, como criterio de desempate, o erro (MSE) do menor para
 % o menor obtendo-se a tabela tab_results_sorted
-tab_results.net = redes_lst;
+tab_results.net = net_lst;
 tab_results_sorted = sortrows(tab_results, {'Media_Acc_Teste', 'Media_Err_Teste'}, {'descend', 'ascend'});
 
 % extrai os 3 melhores e os 3 piores
