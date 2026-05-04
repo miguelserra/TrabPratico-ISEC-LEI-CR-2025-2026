@@ -44,6 +44,8 @@ nn_ff            = @tp_func_feedforwardNN   ;
 % PREPARAÇAO DE DADOS %
 %%%%%%%%%%%%%%%%%%%%%%%
 clc;
+rng('shuffle', 'twister'); % força uma randomizaçao eficaz
+
 fprintf("\n\nTarefa: IMPLEMENTACAO DE REDES NEURONAIS --- A Iniciar..\n\n");
 
 % nome do ficheiro do dataset de teste
@@ -145,22 +147,33 @@ fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise! Aguarde por fav
 
 % paralelizaçao dos fors para acelerar / corre sem toolbox 
 results_lst = cell(num_cases, 13);
+net_lst = cell(num_cases, 1);
 parfor i = 1:num_cases
     
     curr_nn = case_list{i}; 
     
-    % corre caso 10 vezes e calcula as medias
+    % corre caso "num_runs" vezes e calcula as medias
     sum_acc_glob = 0; sum_acc_test = 0; sum_err_glob = 0; sum_err_test = 0;
     num_runs = 10;
+    best_err_nn = Inf;
+    best_nn = [];
     for n = 1 : num_runs
+
         curr_nn.num_run = n;
         [nn_ff_out] = nn_ff(curr_nn, true, false);
         sum_acc_glob = sum_acc_glob + nn_ff_out.acc_glob;
         sum_acc_test = sum_acc_test + nn_ff_out.acc_test;
         sum_err_glob = sum_err_glob + nn_ff_out.err_glob;
         sum_err_test = sum_err_test + nn_ff_out.err_test;
+        
+        % guarda a melhor rede das "num_runs"
+        if nn_ff_out.err_test < best_err_nn
+            best_err_nn = nn_ff_out.err_test;
+            best_nn = nn_ff_out.net;
+        end
     end
     
+    % calcula as medias
     avg_acc_glob = sum_acc_glob / num_runs;
     avg_acc_test = sum_acc_test / num_runs;
     avg_err_glob = sum_err_glob / num_runs;
@@ -185,6 +198,8 @@ parfor i = 1:num_cases
                             avg_acc_test            ...
                         };
 
+    net_lst{i} = best_nn;
+
 end
 
 
@@ -195,10 +210,24 @@ res_col_names = {'Case_Name', 'Imputacao', 'Dados', 'Topologia', ...
             
 
 tab_results = cell2table(results_lst, 'VariableNames', res_col_names);
-excel_out = output_folder_path + "Resultados_Estudo_Parametrico.xlsx";
-writetable(tab_results, excel_out);
+file_out = output_folder_path + "Resultados_Estudo_Parametrico.xlsx";
+writetable(tab_results, file_out);
 
 fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
+
+% adiciona a lista de redes 'a tab_results e ordena a lista por mair para
+% menor precisao e, como criterio de desempate, o erro (MSE) do menor para
+% o menor obtendo-se a tabela tab_results_sorted
+tab_results.net = redes_lst;
+tab_results_sorted = sortrows(tab_results, {'Media_Acc_Teste', 'Media_Err_Teste'}, {'descend', 'ascend'});
+
+% extrai os 3 melhores e os 3 piores
+results_top3 = tab_results_sorted(1:3, {'Case_Name', 'net'});
+results_bot3 = tab_results_sorted(end-2:end, {'Case_Name', 'net'});
+
+% grava na pasta
+file_out = output_folder_path + "RN_3melhores_e_3piores.mat";
+save(file_out, 'results_top3', 'results_bot3');
 
 
 function [name] = gen_case_name(nn)

@@ -102,6 +102,8 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
 
     % reativa plot de figuras
     set(0, 'DefaultFigureVisible', 'on');
+
+    neural_network_setup.net = net;
 end
 
 
