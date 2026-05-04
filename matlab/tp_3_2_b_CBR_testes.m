@@ -45,6 +45,7 @@ tp_3_0_setup_common;
 %       output_folder_path
 %       time
 
+mkdir(output_folder_path + "Common/")
 mkdir(output_folder_path + "Median/")
 mkdir(output_folder_path + "MICE/")
 
@@ -52,11 +53,11 @@ mkdir(output_folder_path + "MICE/")
 type_imput = ["Median" , "MICE"];  %tipos de imputaçao de fill nans
 type_data  = [ "ORIG"  , "NORM"]; %tipos de dados - originais ou normalizados
 
-weighting_factors = dictionary(  ["w", "w2", "1s" , "soCat"] , ...
-                               { [5,5,4,2,4,1,3,3,3,3,3,2,2,3],     ... pesos estimados, w
-                                 [25,25,16,4,16,1,9,9,9,9,9,4,4,9], ... w^2
-                                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1]    ,... tudo 1s
-                                 [0,0,0,0,0,0,0,0,0,0,1,1,1,1]   });... so categoricos
+weighting_factors = dictionary(  ["w", "w2", "1s" , "soCat"]        , ...
+                               { [5,5,4,2,4,1,3,3,3,3,3,2,2,3]      , ... pesos estimados, w
+                                 [25,25,16,4,16,1,9,9,9,9,9,4,4,9]  , ... w^2
+                                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1]      , ... tudo 1s
+                                 [0,0,0,0,0,0,0,0,0,0,1,1,1,1]    });... so categoricos
                                  
                                  
 
@@ -67,6 +68,8 @@ weighting_factors = dictionary(  ["w", "w2", "1s" , "soCat"] , ...
 % usamos sempre o ficheiro sem normalizaçao e aplicamos o rescaling
 % utilizando o ficheiro de parametros gerado para cada type_imput
 
+results_lst = struct('config', {}, 'taxa_acerto', {}, 'similaridade_media', {});
+inc = 0;
 for t_imput = type_imput
     
     % le o ficheiro excel do dataset desejado para dentro de tabCaseLib
@@ -125,25 +128,64 @@ for t_imput = type_imput
 
             end
             
-            success_mask = string(tabCaseLib_T.class_cat_predict) == string(tabCaseLib_T.class_cat);
-            success_rate = sum(success_mask)./size(success_mask,1)*100;
+            accuracy_mask = string(tabCaseLib_T.class_cat_predict) == string(tabCaseLib_T.class_cat);
+            accuracy_ratio = sum(accuracy_mask)./size(accuracy_mask,1)*100;
             sim_max = max(tabCaseLib_T.predict_similarity) *100;
             sim_min = min(tabCaseLib_T.predict_similarity) *100;
             sim_med = mean(tabCaseLib_T.predict_similarity)*100;
             sim_std = std(tabCaseLib_T.predict_similarity) *100;
 
-            fprintf("  Taxa de previsoes corretas: \t%.2f%%\n", success_rate);
-            fprintf("  Similaridade Maxima: \t\t%.2f%%\n", sim_max);
-            fprintf("  Similaridade Minima: \t\t%.2f%%\n", sim_min);
-            fprintf("  Similaridade Media: \t\t%.2f%%\n", sim_med);
-            fprintf("  Similaridade DesvPad: \t%.2f%%\n\n", sim_std);
+            fprintf("  Taxa de acerto: \t%.2f%%\n"        , accuracy_ratio);
+            fprintf("  Similaridade Maxima: \t\t%.2f%%\n" , sim_max       );
+            fprintf("  Similaridade Minima: \t\t%.2f%%\n" , sim_min       );
+            fprintf("  Similaridade Media: \t\t%.2f%%\n"  , sim_med       );
+            fprintf("  Similaridade DesvPad: \t%.2f%%\n\n", sim_std       );
 
             path = output_folder_path + t_imput + "/out" + "_" + t_imput + "_"+ t_data + "_" + t_wf + ".xlsx";
             writetable(tabCaseLib_T, path);
-    
+            
+
+            config_name = t_imput + "-" + t_data + "-" + t_wf;
+            
+            inc = inc + 1;
+            results_lst(inc).config             = config_name;
+            results_lst(inc).taxa_acerto        = accuracy_ratio;
+            results_lst(inc).similaridade_media = sim_med;
+
 
         end
     end
 end
 
-disp("Tarefa: TESTE DE CBR --- Concluida sem erros")
+%%%%%%%%%%%%%%%%%%%%%%%
+% PLOT DOS RESULTADOS %
+%%%%%%%%%%%%%%%%%%%%%%%
+ 
+fprintf("\nTarefa: GERAR PLOTS --- Atributos vs Target...\n");
+
+tab_res_cbr = struct2table(results_lst);
+data_to_plot = [tab_res_cbr.taxa_acerto, tab_res_cbr.similaridade_media];
+
+w_order       = {'w', 'w2', '1s', 'soCat'};
+t_data_order  = {'ORIG', 'NORM'};
+t_imput_order = {'Median', 'MICE'};
+
+fig_cbr = figure('Position', [100, 100, 1200, 600]); 
+b = bar(data_to_plot, 'grouped');
+
+xticks(1:height(tab_res_cbr));
+xticklabels(tab_res_cbr.config);
+xtickangle(45); 
+ylabel('Percentagem [%]', 'FontWeight', 'bold');
+ylim([0 100]); 
+grid on;
+
+legend({'Taxa de Acerto', 'Similaridade Media'}, 'Location', 'southoutside', 'NumColumns', 2);
+grid on;
+
+file_name = output_folder_path + "Common/plot_Resumo_Testes_CBR.png";
+exportgraphics(fig_cbr, file_name, 'Resolution', 300);
+
+fprintf("\nTarefa: GERAR PLOTS --- Graficos exportados.\n\n");
+
+fprintf("Tarefa: TESTE DE CBR --- Concluida sem erros.")

@@ -40,6 +40,57 @@ mkdir(output_folder_path + "Common/")
 mkdir(output_folder_path + "Median/")
 mkdir(output_folder_path + "MICE/")
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PLOT DE ATRIBUTOS VS TARGET %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf("\nTarefa: GERAR PLOTS --- Atributos vs Target...\n");
+
+
+tabCaseLib_NoNaNs = rmmissing(tabCaseLib);
+target_data = categorical(tabCaseLib_NoNaNs.(target_col));
+ordem_atual = categories(target_data);
+target_data = reordercats(target_data, flip(ordem_atual));
+
+for col_name = att_cols
+    
+    fig = figure('Visible', 'off', 'Position', [100 100 800 600]); 
+    file_name = output_folder_path + "Common/plot_" + col_name + ".png";
+
+    if ismember(col_name, num_att_cols)
+        
+        boxplot(tabCaseLib_NoNaNs.(col_name), target_data);
+        xlabel(strrep(target_col, "_", " "), 'FontWeight', 'bold');
+        ylabel(strrep(col_name, "_", " "), 'FontWeight', 'bold');
+        grid on;
+        
+    elseif ismember(col_name, categorical_att_cols)
+
+        att_data = categorical(tabCaseLib_NoNaNs.(col_name));
+        freq_matrix = crosstab(att_data, target_data);
+        
+        labels_att = categories(att_data);
+        labels_target = categories(target_data);
+        bar(freq_matrix, 'grouped');
+        xlabel(strrep(col_name, "_", " "), 'FontWeight', 'bold');
+        ylabel('Num. ocorrencias', 'FontWeight', 'bold');
+        
+        xticklabels(labels_att);
+        legend(labels_target, 'Location', 'southoutside', 'NumColumns', 3);
+        grid on;
+        
+    end
+    
+    
+    exportgraphics(fig, file_name, 'Resolution', 300);
+    close(fig);
+    
+    fprintf("     Guardado: %s\n", file_name);
+end
+
+fprintf("\nTarefa: GERAR PLOTS --- plots foram exportados com sucesso!\n");
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONVERSAO DE CATEGORICAS EM INTEGER %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,7 +150,7 @@ for tab_name = transpose( keys(tabCaseLib_dict) )
     tabCaseLib = tabCaseLib_dict{tab_name};
     
     % para esta tarefa e' necessario normalizar os valores numericos antes
-    % de os passar ao retrieve
+    % de os passar ao retrieve - metodo rescaling
     max_vals = max(tabCaseLib{:,num_att_cols});
     min_vals = min(tabCaseLib{:,num_att_cols});
     ranges   = max_vals - min_vals;
@@ -208,3 +259,4 @@ for tab_name = transpose( keys(tabCaseLib_dict) )
 end
 
 disp("Tarefa: TRATAMENTO DO DATASET --- Concluida sem erros")
+
