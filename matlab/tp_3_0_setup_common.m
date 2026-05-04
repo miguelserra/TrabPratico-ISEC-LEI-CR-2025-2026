@@ -1,6 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT AUXILIAR COM DADOS COMUNS %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath('functions');
 
 % colunas de atributos
 all_vars = string(tabCaseLib.Properties.VariableNames);

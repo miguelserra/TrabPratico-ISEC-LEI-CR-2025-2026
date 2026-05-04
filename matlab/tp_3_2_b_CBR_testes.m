@@ -4,10 +4,13 @@
 %                        !!! IMPORTANTE !!!                        %
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% pasta de funcoes
+addpath('functions');
 retrieve         = @tp_func_retrieve        ;
 get_file         = @tp_func_get_xlfile      ;
 normalize_values = @tp_func_rescale         ;
 denorm_values    = @tp_func_rescale_reverse ;
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % PREPARAÇAO DE DADOS %
@@ -15,12 +18,25 @@ denorm_values    = @tp_func_rescale_reverse ;
 clc;
 fprintf("\n\nTarefa: TESTE DE CBR --- A Iniciar..\n\n");
 
+% mostra imagens no ecra? 'on' : 'off'
+fig_visibility = 'off';
 
 % nome do ficheiro do dataset de teste
 name = "dataset_TP";
 
 % nome da pasta de output
 output_folder = "OUTPUT_3.2.b_CBR_TESTS";
+
+% prepara as pastas e nomes comuns via script aux
+tp_3_0_setup_common;
+% neste script ficam definidas as variaveis: 
+%       all_vars
+%       att_cols
+%       target_col
+%       num_att_cols
+%       categorical_att_cols
+%       output_folder_path
+%       time
 
 % le o dataset de teste para uma tabela/dataframe
 wildcard = "*_TRATAM*/Common/*_num.xlsx";
@@ -31,19 +47,6 @@ tabCaseLib = readtable(ds_file_path);
 wildcard = "*_TRATAM*/Common/*_test_num.xlsx";
 ds_file_path = get_file(wildcard);
 tabCaseLib_T_base = readtable(ds_file_path);
-
-% prepara as pastas e nomes comuns via script aux
-tp_3_0_setup_common;
-% neste script ficam definidas as variaveis: 
-%       tabCaseLib
-%       tabCaseLib_T_base
-%       all_vars
-%       att_cols
-%       target_col
-%       num_att_cols
-%       categorical_att_cols
-%       output_folder_path
-%       time
 
 mkdir(output_folder_path + "Common/")
 mkdir(output_folder_path + "Median/")
@@ -170,7 +173,7 @@ w_order       = {'w', 'w2', '1s', 'soCat'};
 t_data_order  = {'ORIG', 'NORM'};
 t_imput_order = {'Median', 'MICE'};
 
-fig_cbr = figure('Position', [100, 100, 1200, 600]); 
+fig_cbr = figure('Visible', fig_visibility, 'Position', [100, 100, 1200, 600]); 
 b = bar(data_to_plot, 'grouped');
 
 xticks(1:height(tab_res_cbr));

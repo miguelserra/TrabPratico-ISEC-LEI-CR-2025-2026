@@ -32,6 +32,7 @@ num_epochs = [20 1000];
 %                        !!! IMPORTANTE !!!                        %
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath('functions');
 get_file         = @tp_func_get_xlfile      ;
 normalize_values = @tp_func_rescale         ;
 denorm_values    = @tp_func_rescale_reverse ;

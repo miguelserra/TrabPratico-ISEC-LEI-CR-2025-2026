@@ -4,7 +4,7 @@
 %                        !!! IMPORTANTE !!!                        %
 % >>> REVER SEMPRE ESTE SETOR QUANDO SE ALTERAREM FUNÇOES!!!!! <<< %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+addpath('functions');
 fill_nans = @tp_func_fill_nans;
 retrieve  = @tp_func_retrieve;
 
