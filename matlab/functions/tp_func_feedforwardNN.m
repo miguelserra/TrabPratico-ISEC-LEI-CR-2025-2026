@@ -24,7 +24,9 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     net = feedforwardnet(   neural_network_setup.topology, ...
                             neural_network_setup.training_fun   );
     
-    net.trainParam.epochs = neural_network_setup.num_epochs;
+    % evoluçao das epocas
+    net.trainParam.epochs = 1000;%neural_network_setup.num_epochs;
+    net.trainParam.max_fail = neural_network_setup.max_fail; % num tentativas apos err min
 
     % divisao do dataset
     net.divideFcn = 'dividerand'; % por defeito, p/ todos os casos
@@ -52,13 +54,16 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
 
     [net,tr] = train(net, inp_layer, out_layer);
     
-    out_val  = sim(net, inp_layer);
+    out_predict_val  = sim(net, inp_layer);
     
-    error_glob = perform(net, out_val, out_layer) * 100;
-    acc_glob   = accuracy(out_val, out_layer);
+    error_glob = perform(net, out_predict_val, out_layer) * 100;
+    acc_glob   = accuracy(out_predict_val, out_layer);
     
     neural_network_setup.err_glob   = error_glob;
     neural_network_setup.acc_glob   = acc_glob;
+    neural_network_setup.tr_time    = tr.time(end);
+    neural_network_setup.num_epochs = tr.epoch(end);
+    neural_network_setup.best_epoch = tr.best_epoch;
     
     if ~hidden_calc
         fprintf("\nA correr: %s\n", case_name);
@@ -73,18 +78,21 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     inp_layer_test = inp_layer(:, tr.testInd);
     out_layer_test = out_layer(:, tr.testInd);
 
-    out_test = sim(net, inp_layer_test);
+    out_predict_test = sim(net, inp_layer_test);
 
     if print_figs
-        plotconfusion(out_layer_test, out_test); 
+        plotconfusion(out_layer_test, out_predict_test); 
         plotperf(tr);
     end
 
-    error_test = perform(net, out_test, out_layer_test);
-    acc_test   = accuracy(out_test, out_layer_test);
+    error_test = perform(net, out_predict_test, out_layer_test);
+    acc_test   = accuracy(out_predict_test, out_layer_test);
+    
+    neural_network_setup.err_test         = error_test * 100;
+    neural_network_setup.acc_test         = acc_test;
+    neural_network_setup.out_layer_test   = out_layer_test;
+    neural_network_setup.out_predict_test = out_predict_test;
 
-    neural_network_setup.err_test   = error_test * 100;
-    neural_network_setup.acc_test   = acc_test;
     
     if ~hidden_calc
         fprintf('\nErro na classificaçao (fase de teste) = %f\n', error_test)

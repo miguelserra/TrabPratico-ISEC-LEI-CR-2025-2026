@@ -74,11 +74,6 @@ for t_imput = type_imput
     wildcard = "*_TRATAM*/*" + t_imput + "/*_ORIG_*.xlsx";
     ds_file_path = get_file(wildcard);
     tabCaseLib_base = readtable(ds_file_path);
-    
-    % grava tabelas dos datasets com novo nome para este ciclo, para as
-    % proteger as originais de escrita
-    tabCaseLib = tabCaseLib_base;
-    tabCaseLib_T = tabCaseLib_T_base;
 
     % se for o normalizado, temos de importar o ficheiro de max e min
     wildcard = "*_TRATAM*/*" + t_imput + "/*_PARAMS_*.mat";
@@ -86,6 +81,11 @@ for t_imput = type_imput
     load(params_file_path); % load de dict_att_min e dict_att_max
 
     for t_data = type_data
+
+        % grava tabelas dos datasets com novo nome para este ciclo, para as
+        % proteger as originais de escrita
+        tabCaseLib = tabCaseLib_base;
+        tabCaseLib_T = tabCaseLib_T_base;
 
         if t_data == "NORM"
             % rescale dos datasets treino e de teste (apenas att numericos)

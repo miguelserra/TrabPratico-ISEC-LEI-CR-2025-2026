@@ -3,8 +3,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % parametros quanto aos dados de entrada
-%type_imput = ["Median" , "MICE"]; 
-t_imput   = "MICE"              ; % tipo de imputaçao de fill nans
+type_imput = ["Median" , "MICE"]; 
+%t_imput   = "MICE"              ; % tipo de imputaçao de fill nans
 %type_data = [ "ORIG"  , "NORM"]
 t_data = "NORM" ; % tipos de dados - originais ou normalizado
 
@@ -12,23 +12,22 @@ t_data = "NORM" ; % tipos de dados - originais ou normalizado
 topology = {10; [5 5]; [7 3]; 6; [3 3]; 12; [6 6]; [8 4]; [4 4 4]} ;  
 
 % parametros de treino 
-training_fun   = ["trainlm", "trainbfg", "traingd"];
-transf_fun_hid = ["poslin" , "logsig"  , "tansig"];
-transf_fun_out = ["purelin", "logsig" ];
+training_fun   = ["trainlm", "traingd", "trainbr", "trainscg"];
+transf_fun_hid = ["tansig"];
+transf_fun_out = ["purelin", "tansig", "logsig", "softmax"];
 
 % proporçoes de treino/validaçao/teste
-data_split_proportions = {[0.7 0.15 0.15], [0.7 0.2 0.1], [0.9 0.05 0.05]};
+data_split_proportions = {[0.7 0.15 0.15], [0.8 0.1 0.1], [0.9 0.05 0.05]};
 
-% numero de epocas
-% nao vale a pena variar neste script. o matlab corta antes. Caso contrario 
-num_epochs = [20 1000];
+% numero de iteraçoes com erro acima da melhor epoca 
+epochs_max_fail = [2, 6, 20];
 
 % numero de repetiçoes por caso
 num_reps_nn = 30;
 
 % coef de aprendizagem
 %learn_rates = [0.01, 0.05, 0.1]; 
-% Nao foi adotada a variacao porque e' diferente para cada funçao de  treino
+% Nao foi adotada a variacao porque so e' valida para gradient descent
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HANDLES DE FUNCOES                                               %
@@ -103,34 +102,35 @@ nn_case.input_layer  = tabCaseLib{:,att_cols};
 nn_case.output_layer = tabCaseLib{:,target_outputs};
 
 case_list = {};
-for topo = transpose(topology)
-    nn_case.topology = cell2mat(topo);
-
-    for trainf = training_fun
-        nn_case.training_fun = trainf;
-
-        for transffHid = transf_fun_hid
-            nn_case.transf_fun_hid = transffHid;
-
-            for transffOut = transf_fun_out
-                nn_case.transf_fun_out = transffOut;
-                
-                for proportions = data_split_proportions
-                    nn_case.data_split = cell2mat(proportions);
-
-                    for num_e = num_epochs
-                        nn_case.num_epochs = num_e;
-                        
-                        nn_case.case_name = gen_case_name(nn_case);
-                        case_list{end+1} = nn_case;   
-
-                    end                      
-
+for t_imput = type_imput
+    for topo = transpose(topology)
+        nn_case.topology = cell2mat(topo);
+    
+        for trainf = training_fun
+            nn_case.training_fun = trainf;
+    
+            for transffHid = transf_fun_hid
+                nn_case.transf_fun_hid = transffHid;
+    
+                for transffOut = transf_fun_out
+                    nn_case.transf_fun_out = transffOut;
+                    
+                    for proportions = data_split_proportions
+                        nn_case.data_split = cell2mat(proportions);
+    
+                        for num_e = epochs_max_fail
+                            nn_case.max_fail = num_e;
+                            
+                            nn_case.case_name = gen_case_name(nn_case);
+                            case_list{end+1} = nn_case;   
+    
+                        end                      
+    
+                    end
                 end
             end
         end
     end
-
 end
 
 
@@ -141,37 +141,39 @@ fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise! Aguarde por fav
 
 
 % paralelizaçao dos fors para acelerar / corre sem toolbox 
-results_lst = cell(num_cases, 13);
-%net_lst = cell(num_cases, 1);
+results_lst = cell(num_cases, 16);
 parfor i = 1:num_cases
     
     curr_nn = case_list{i}; 
     
     % corre caso "num_reps_nn" vezes e calcula as medias
-    sum_acc_glob = 0; sum_acc_test = 0; sum_err_glob = 0; sum_err_test = 0;
-    best_err_nn = Inf;
-    best_nn = [];
+    sum_acc_glob   = 0; sum_acc_test   = 0; 
+    sum_err_glob   = 0; sum_err_test   = 0;
+    sum_num_epochs = 0; sum_best_epoch = 0;
+    sum_tr_time    = 0;
+
     for n = 1 : num_reps_nn
 
         curr_nn.rep_num = n;
-        [nn_ff_out] = nn_ff(curr_nn, true, false);
-        sum_acc_glob = sum_acc_glob + nn_ff_out.acc_glob;
-        sum_acc_test = sum_acc_test + nn_ff_out.acc_test;
-        sum_err_glob = sum_err_glob + nn_ff_out.err_glob;
-        sum_err_test = sum_err_test + nn_ff_out.err_test;
-        
-        % guarda a melhor rede das "num_reps_nn"
-        %if nn_ff_out.err_test < best_err_nn
-        %    best_err_nn = nn_ff_out.err_test;
-        %    best_nn = nn_ff_out.net;
-        %end
+        [nn_ff_out]    = nn_ff(curr_nn, true, false);
+        sum_acc_glob   = sum_acc_glob   + nn_ff_out.acc_glob;
+        sum_acc_test   = sum_acc_test   + nn_ff_out.acc_test;
+        sum_err_glob   = sum_err_glob   + nn_ff_out.err_glob;
+        sum_err_test   = sum_err_test   + nn_ff_out.err_test;
+        sum_num_epochs = sum_num_epochs + nn_ff_out.num_epochs;
+        sum_best_epoch = sum_best_epoch + nn_ff_out.best_epoch; 
+        sum_tr_time    = sum_tr_time    + nn_ff_out.tr_time;
+
     end
     
     % calcula as medias
-    avg_acc_glob = sum_acc_glob / num_reps_nn;
-    avg_acc_test = sum_acc_test / num_reps_nn;
-    avg_err_glob = sum_err_glob / num_reps_nn;
-    avg_err_test = sum_err_test / num_reps_nn;
+    avg_acc_glob   =  sum_acc_glob   / num_reps_nn;
+    avg_acc_test   =  sum_acc_test   / num_reps_nn;
+    avg_err_glob   =  sum_err_glob   / num_reps_nn;
+    avg_err_test   =  sum_err_test   / num_reps_nn;
+    avg_num_epochs =  sum_num_epochs / num_reps_nn; 
+    avg_best_epoch =  sum_best_epoch / num_reps_nn;  
+    avg_tr_time    =  sum_tr_time    / num_reps_nn; 
     
     topo_str  = mat2str(curr_nn.topology);
     split_str = mat2str(curr_nn.data_split);
@@ -184,12 +186,15 @@ parfor i = 1:num_cases
                             curr_nn.training_fun,   ...
                             curr_nn.transf_fun_hid, ...
                             curr_nn.transf_fun_out, ...
-                            curr_nn.num_epochs,     ...
+                            curr_nn.max_fail,       ...
                             split_str,              ...
                             avg_err_glob,           ...
                             avg_err_test,           ...
                             avg_acc_glob,           ...
-                            avg_acc_test            ...
+                            avg_acc_test,           ...
+                            avg_num_epochs,         ...
+                            avg_best_epoch,         ...
+                            avg_tr_time             ...
                         };
 
     net_lst{i} = best_nn;
@@ -197,10 +202,11 @@ parfor i = 1:num_cases
 end
 
 
-res_col_names = {'Case_Name', 'Imputacao', 'Dados', 'Topologia', ...
-                 'Treino_Func', 'Transf_Hid', 'Transf_Out', 'Num_Epocas' ...
-                 'Divisao_Dados', 'Media_Err_Global', 'Media_Err_Teste',...
-                 'Media_Acc_Global', 'Media_Acc_Teste'};
+res_col_names = {'case_name', 'type_imp', 'type_data', 'topology', ...
+                 'training_fun', 'transf_fun_hid', 'transf_fun_out', ...
+                 'data_split', 'epochs_max_fail',' avg_err_global',  ...
+                 'avr_err_test', 'avg_acc_global', 'avg_acc_test',  ...
+                 'avg_num_epochs', 'avg_best_epoch', 'avg_tr_time'};
             
 
 tab_results = cell2table(results_lst, 'VariableNames', res_col_names);
@@ -209,33 +215,18 @@ writetable(tab_results, file_out);
 
 fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
 
-% adiciona a lista de redes 'a tab_results e ordena a lista por mair para
-% menor precisao e, como criterio de desempate, o erro (MSE) do menor para
-% o maior obtendo-se a tabela tab_results_sorted
-%tab_results.net = net_lst;
-%tab_results_sorted = sortrows(tab_results, {'Media_Acc_Teste', 'Media_Err_Teste'}, {'descend', 'ascend'});
-%
-% extrai os 3 melhores e os 3 piores
-%neural_networks_top3 = tab_results_sorted(1:3, {'Case_Name', 'net'});
-%neural_networks_bot3 = tab_results_sorted(end-2:end, {'Case_Name', 'net'});
-
-% grava na pasta
-%file_out = output_folder_path + "RN_3melhores_e_3piores.mat";
-%save(file_out, 'neural_networks_top3', 'neural_networks_bot3');
-
 
 function [name] = gen_case_name(nn)
 
-    name = "RN_" + nn.type_imp + "_" + nn.type_data + "_Topo";
+    name = "RN_" + nn.type_imp + "_" + "_Topo";
 
     for n = nn.topology
         name = name + "-" + n;
     end
     
     name = name + "_" + nn.training_fun;
-    name = name + "_HLy-" + nn.transf_fun_hid;
-    name = name + "_OLy-" + nn.transf_fun_out;
-    name = name + "_EP" + nn.num_epochs + "_Div";
+    name = name + "_" + nn.transf_fun_out;
+    name = name + "_MF" + nn.max_fail + "_Div";
 
     for n = nn.data_split
         name = name + "-" + n;
