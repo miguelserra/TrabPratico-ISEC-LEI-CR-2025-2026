@@ -9,7 +9,7 @@ type_imput = ["Median" , "MICE"];
 t_data = "NORM" ; % tipos de dados - originais ou normalizado
 
 % parametros quanto à topologia das redes neuronais
-topology = {10; [5 5]; [7 3]; 6; [3 3]; 12; [6 6]; [8 4]; [4 4 4]} ;  
+topology = {10; [5 5]; 6; [3 3]; 14; [7 7]} ;  
 
 % parametros de treino 
 training_fun   = ["trainlm", "traingd", "trainbr", "trainscg"];
@@ -17,7 +17,7 @@ transf_fun_hid = ["tansig"];
 transf_fun_out = ["purelin", "tansig", "logsig", "softmax"];
 
 % proporçoes de treino/validaçao/teste
-data_split_proportions = {[0.7 0.15 0.15], [0.8 0.1 0.1], [0.9 0.05 0.05]};
+data_split_proportions = {[0.7 0.15 0.15], [0.6 0.2 0.2], [0.9 0.05 0.05]};
 
 % numero de iteraçoes com erro acima da melhor epoca 
 epochs_max_fail = [2, 6, 20];
