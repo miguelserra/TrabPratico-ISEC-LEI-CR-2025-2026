@@ -1,0 +1,25 @@
+Comparacao CBR vs Redes Neuronais
+=================================
+
+Melhor resultado CBR:
+- Configuracao: Median-ORIG-w
+- Tipo de imputacao: Median
+- Tipo de dados: ORIG
+- Pesos: w
+- Taxa de acerto: 100.00%
+- Similaridade media: 93.76%
+
+Melhor resultado RN:
+- Rede: RN_1
+- Ficheiro: best_RN_1.mat
+- Tipo de imputacao: MICE
+- Tipo de dados: NORM
+- Topologia: 10
+- Funcao de treino: trainlm
+- Funcao de saida: logsig
+- Accuracy global: 100.00%
+
+Analise:
+O CBR tem a vantagem de ser mais interpretavel, pois a classificacao e baseada nos casos semelhantes encontrados na base de casos.
+As Redes Neuronais podem apresentar melhor capacidade de generalizacao, pois aprendem padroes a partir dos dados de treino, mas sao menos interpretaveis.
+A escolha do melhor metodo deve considerar nao apenas a taxa de acerto, mas tambem a explicabilidade, o custo computacional e a facilidade de manutencao.
