@@ -25,8 +25,8 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
                             neural_network_setup.training_fun   );
     
     % evoluçao das epocas
-    net.trainParam.epochs = 1000;%neural_network_setup.num_epochs;
-    net.trainParam.max_fail = neural_network_setup.max_fail; % num tentativas apos err min
+    net.trainParam.epochs = 5000;%neural_network_setup.num_epochs;
+    net.trainParam.max_fail = neural_network_setup.epochs_max_fail; % num tentativas apos err min
 
     % divisao do dataset
     net.divideFcn = 'dividerand'; % por defeito, p/ todos os casos

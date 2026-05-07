@@ -95,7 +95,7 @@ if t_data == "NORM"
     tabCaseLib{:,att_cols} = normalize_values(tabCaseLib{:,att_cols}, cols_min, cols_max);
 end
 
-nn_case.type_imp = t_imput;
+
 nn_case.type_data = t_data;
 
 nn_case.input_layer  = tabCaseLib{:,att_cols};
@@ -103,6 +103,8 @@ nn_case.output_layer = tabCaseLib{:,target_outputs};
 
 case_list = {};
 for t_imput = type_imput
+    nn_case.type_imp = t_imput;
+
     for topo = transpose(topology)
         nn_case.topology = cell2mat(topo);
     
@@ -119,7 +121,7 @@ for t_imput = type_imput
                         nn_case.data_split = cell2mat(proportions);
     
                         for num_e = epochs_max_fail
-                            nn_case.max_fail = num_e;
+                            nn_case.epochs_max_fail = num_e;
                             
                             nn_case.case_name = gen_case_name(nn_case);
                             case_list{end+1} = nn_case;   
@@ -141,7 +143,7 @@ fprintf("\nTotal de configs a testar = %d.\nA iniciar a analise! Aguarde por fav
 
 
 % paralelizaçao dos fors para acelerar / corre sem toolbox 
-results_lst = cell(num_cases, 16);
+results_lst = cell(num_cases, 15);
 parfor i = 1:num_cases
     
     curr_nn = case_list{i}; 
@@ -181,13 +183,12 @@ parfor i = 1:num_cases
     results_lst(i, :) = {                           ...
                             curr_nn.case_name,      ...
                             curr_nn.type_imp,       ...
-                            curr_nn.type_data,      ...
                             topo_str,               ...
                             curr_nn.training_fun,   ...
                             curr_nn.transf_fun_hid, ...
                             curr_nn.transf_fun_out, ...
-                            curr_nn.max_fail,       ...
                             split_str,              ...
+                            curr_nn.epochs_max_fail,...
                             avg_err_glob,           ...
                             avg_err_test,           ...
                             avg_acc_glob,           ...
@@ -197,12 +198,10 @@ parfor i = 1:num_cases
                             avg_tr_time             ...
                         };
 
-    net_lst{i} = best_nn;
-
 end
 
 
-res_col_names = {'case_name', 'type_imp', 'type_data', 'topology', ...
+res_col_names = {'case_name', 'type_imp', 'topology', ...
                  'training_fun', 'transf_fun_hid', 'transf_fun_out', ...
                  'data_split', 'epochs_max_fail',' avg_err_global',  ...
                  'avr_err_test', 'avg_acc_global', 'avg_acc_test',  ...
@@ -226,7 +225,7 @@ function [name] = gen_case_name(nn)
     
     name = name + "_" + nn.training_fun;
     name = name + "_" + nn.transf_fun_out;
-    name = name + "_MF" + nn.max_fail + "_Div";
+    name = name + "_MF" + nn.epochs_max_fail + "_Div";
 
     for n = nn.data_split
         name = name + "-" + n;
