@@ -20,9 +20,9 @@ function [new_temperature, ff_error] = tp_func_reuse(tabRetrievedCases, tabNewCa
     alpha             = 0.001   ;  % coef de aprendizagem
     epochs            = 10000   ;  % numero de epocas de treino
 
-    % non-random seed
-    rng('default');
-    rng(1);
+    
+    % força uma randomizaçao eficaz
+    rng('shuffle', 'twister'); 
 
     
     %%%%%%%%%%

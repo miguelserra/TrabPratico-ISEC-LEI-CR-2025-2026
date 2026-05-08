@@ -21,6 +21,7 @@ struct_new_case.operating_mode     = 'Overload'  ;
 struct_new_case.cooling_type       = 'Air'       ;
 struct_new_case.sensor_status      = 'OK'        ;
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETUP DATASET E PESOS CBR %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,9 +30,6 @@ struct_new_case.sensor_status      = 'OK'        ;
 type_imput        = "MICE";  %tipos de imputaçao de fill nans
 type_data         = "NORM";  %tipos de dados - originais ou normalizados
 weighting_factors = "w";
-
-
-
 
 
 
@@ -143,7 +141,7 @@ retrieved_cases = tabCaseLib(retrieved_indexes, :);
 retrieved_cases.similarity = retrieved_simil;
 
 retrieved_cases_orig = retrieved_cases;
-retrieved_cases_orig{:,num_att_cols} = retrieved_cases{:,num_att_cols} .* (col_max - col_min) + col_min;
+retrieved_cases_orig{:,num_att_cols} = denorm_values(retrieved_cases{:, num_att_cols}, cols_min, cols_max);
 
 
 col_idx = table(retrieved_indexes, 'VariableNames', "Indice");
@@ -164,8 +162,8 @@ end
 
 [new_temp_norm, ff_error] = reuse(retrieved_cases, tabNewCase);
 
-tmax = col_max(1);
-tmin = col_min(1);
+tmax = cols_max(1);
+tmin = cols_min(1);
 new_temp_orig = denorm_values(new_temp_norm, tmin, tmax);
 
 fprintf("\n[Reuse] Temperatura prevista para o Novo Caso é = %.3fºC (MSError_treino= %.3f%%)\n\n", new_temp_orig, ff_error);
@@ -190,6 +188,8 @@ disp(struct_new_case);
 %  RETAIN  %
 %%%%%%%%%%%%
 if output_folder ~= ""
+    %path de exemplo para nao destruir o ficheiro antigo. se for
+    %necessario, copiar o path do tabCaseLib
     path = output_folder_path + "/out" + "_" + type_imput + "_"+ type_data + "_" + "datasetTP_with_retained.xlsx";
     writetable(retrieved_cases_orig, path);
     retain(tabCaseLib, struct_new_case, path);

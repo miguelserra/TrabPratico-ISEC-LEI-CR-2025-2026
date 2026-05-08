@@ -24,6 +24,10 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     net = feedforwardnet(   neural_network_setup.topology, ...
                             neural_network_setup.training_fun   );
     
+    % desativa a normalizaçao por defeito
+    net.inputs{1}.processFcns               = {};
+    net.outputs{net.numLayers}.processFcns  = {};
+
     % evoluçao das epocas
     net.trainParam.epochs = 5000;%neural_network_setup.num_epochs;
     net.trainParam.max_fail = neural_network_setup.epochs_max_fail; % num tentativas apos err min

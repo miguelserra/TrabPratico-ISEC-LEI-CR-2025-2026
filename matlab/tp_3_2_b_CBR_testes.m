@@ -6,10 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % pasta de funcoes
 addpath('functions');
-retrieve         = @tp_func_retrieve        ;
-get_file         = @tp_func_get_xlfile      ;
-normalize_values = @tp_func_rescale         ;
-denorm_values    = @tp_func_rescale_reverse ;
+retrieve         = @tp_func_retrieve          ;
+get_file         = @tp_func_get_xlfile        ;
+normalize_values = @tp_func_rescale           ;
+denorm_values    = @tp_func_rescale_reverse   ;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +127,8 @@ for t_imput = type_imput
             end
             
             accuracy_mask = string(tabCaseLib_T.class_cat_predict) == string(tabCaseLib_T.class_cat);
-            accuracy_ratio = sum(accuracy_mask)./size(accuracy_mask,1)*100;
+            accuracy_ratio = sum(accuracy_mask)./size(accuracy_mask,1) * 100;
+            
             sim_max = max(tabCaseLib_T.predict_similarity) *100;
             sim_min = min(tabCaseLib_T.predict_similarity) *100;
             sim_med = mean(tabCaseLib_T.predict_similarity)*100;

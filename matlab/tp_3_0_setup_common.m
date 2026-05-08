@@ -4,6 +4,11 @@
 addpath('functions');
 
 % colunas de atributos
+
+if ~exist('tabCaseLib', 'var')
+    tabCaseLib = readtable("../DADOS/" + name + ".csv");
+end
+
 all_vars = string(tabCaseLib.Properties.VariableNames);
 att_cols = all_vars(1:end-1);
 target_col = all_vars(end);

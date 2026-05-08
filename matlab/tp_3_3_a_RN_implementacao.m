@@ -157,7 +157,9 @@ parfor i = 1:num_cases
     for n = 1 : num_reps_nn
 
         curr_nn.rep_num = n;
-        [nn_ff_out]    = nn_ff(curr_nn, true, false);
+        
+        [nn_ff_out]     = nn_ff(curr_nn, true, false);
+
         sum_acc_glob   = sum_acc_glob   + nn_ff_out.acc_glob;
         sum_acc_test   = sum_acc_test   + nn_ff_out.acc_test;
         sum_err_glob   = sum_err_glob   + nn_ff_out.err_glob;
