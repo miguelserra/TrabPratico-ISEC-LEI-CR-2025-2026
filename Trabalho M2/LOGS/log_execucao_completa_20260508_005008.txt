@@ -1,0 +1,2480 @@
+Pasta do projeto: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2
+Log da execucao: LOGS/log_execucao_completa_20260508_005008.txt
+STOP_ON_ERROR = 1
+RUN_CBR_DEMO_INTERATIVO = 0
+
+======================================================
+ RELOGIO DE EXECUCAO
+======================================================
+Inicio da execucao: 08-05-2026 00:50:08
+======================================================
+
+ATENCAO:
+Para testar TODAS as configuracoes finais das RN,
+confirma que no tp_3_3_a_RN_implementacao.m tens:
+    modo_rapido = false;
+
+Tambem confirma, se quiseres resultados finais:
+    tp_3_3_b_RN_dataset_bruto_vs_norm.m -> num_reps_compare = 10;
+    tp_3_3_c_guardar_melhores_RN.m      -> num_reps_save = 10;
+
+
+
+======================================================
+ FASE 1/7
+ Script: tp_3_1_tratamento_do_dataset.m
+ Objetivo: Tratamento do dataset
+======================================================
+
+
+======================================================
+ TP 3.1 - TRATAMENTO DO DATASET
+======================================================
+
+[1/6] A ler datasets...
+      Treino: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\DADOS\dataset_TP.csv (5000 linhas)
+      Teste : C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\DADOS\dataset_TP_test.csv (30 linhas)
+
+[SETUP] Configuracao comum carregada.
+        Linhas treino      : 5000
+        Total de colunas   : 15
+        Atributos numericos: 10
+        Atributos categor. : 4
+        Target             : class_cat
+        Pasta de output    : ./OUTPUT_3.1_TRATAMENTO/
+
+      --- Dataset treino - valores em falta iniciais ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 7134
+      temperature          ->  480 em falta (9.60%)
+      vibration            ->  496 em falta (9.92%)
+      rotation_speed       ->  527 em falta (10.54%)
+      voltage              ->  470 em falta (9.40%)
+      current              ->  480 em falta (9.60%)
+      pressure             ->  517 em falta (10.34%)
+      noise_level          ->  479 em falta (9.58%)
+      efficiency           ->  503 em falta (10.06%)
+      load_val             ->  515 em falta (10.30%)
+      torque               ->  503 em falta (10.06%)
+      maintenance_level    ->  466 em falta (9.32%)
+      operating_mode       ->  468 em falta (9.36%)
+      cooling_type         ->  496 em falta (9.92%)
+      sensor_status        ->  502 em falta (10.04%)
+      class_cat            ->  232 em falta (4.64%)
+
+      --- Dataset teste - valores em falta iniciais ---
+      Dimensao: 30 linhas x 15 colunas
+      Total de valores em falta: 0
+      Sem valores em falta.
+
+      Colunas numericas usadas: temperature, vibration, rotation_speed, voltage, current, pressure, noise_level, efficiency, load_val, torque
+      Colunas categoricas usadas: maintenance_level, operating_mode, cooling_type, sensor_status
+      Coluna target: class_cat
+
+[2/6] A gerar graficos Atributos vs Target...
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_temperature.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_vibration.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_rotation_speed.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_voltage.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_current.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_pressure.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_noise_level.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_efficiency.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_load_val.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_torque.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_maintenance_level.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_operating_mode.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_cooling_type.png
+      Guardado: ./OUTPUT_3.1_TRATAMENTO/Common/plot_sensor_status.png
+      Graficos exportados com sucesso.
+
+[3/6] A converter variaveis categoricas para codigos numericos...
+      Datasets numericos guardados em Common/.
+
+      --- Depois da codificacao - treino ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 7134
+      temperature          ->  480 em falta (9.60%)
+      vibration            ->  496 em falta (9.92%)
+      rotation_speed       ->  527 em falta (10.54%)
+      voltage              ->  470 em falta (9.40%)
+      current              ->  480 em falta (9.60%)
+      pressure             ->  517 em falta (10.34%)
+      noise_level          ->  479 em falta (9.58%)
+      efficiency           ->  503 em falta (10.06%)
+      load_val             ->  515 em falta (10.30%)
+      torque               ->  503 em falta (10.06%)
+      maintenance_level    ->  466 em falta (9.32%)
+      operating_mode       ->  468 em falta (9.36%)
+      cooling_type         ->  496 em falta (9.92%)
+      sensor_status        ->  502 em falta (10.04%)
+      class_cat            ->  232 em falta (4.64%)
+
+      --- Depois da codificacao - teste ---
+      Dimensao: 30 linhas x 15 colunas
+      Total de valores em falta: 0
+      Sem valores em falta.
+
+[4/6] A preencher valores em falta nos ATRIBUTOS...
+         MICE iter 1 -> Delta: 104.833955
+         MICE iter 2 -> Delta: 27.897326
+         MICE iter 3 -> Delta: 9.728237
+         MICE iter 4 -> Delta: 7.053164
+         MICE iter 5 -> Delta: 4.693750
+         MICE iter 6 -> Delta: 0.620511
+         MICE iter 7 -> Delta: 0.327810
+         MICE iter 8 -> Delta: 0.172148
+         MICE iter 9 -> Delta: 0.082945
+         MICE iter 10 -> Delta: 0.049223
+         MICE iter 11 -> Delta: 0.032290
+         MICE iter 12 -> Delta: 0.021781
+         MICE iter 13 -> Delta: 0.014759
+         MICE iter 14 -> Delta: 0.010000
+         MICE iter 15 -> Delta: 0.006776
+         MICE iter 16 -> Delta: 0.004591
+         MICE iter 17 -> Delta: 0.003111
+         MICE iter 18 -> Delta: 0.002108
+         MICE iter 19 -> Delta: 0.001428
+         MICE iter 20 -> Delta: 0.000968
+         MICE iter 21 -> Delta: 0.000656
+         MICE iter 22 -> Delta: 0.000444
+         MICE iter 23 -> Delta: 0.000301
+         MICE iter 24 -> Delta: 0.000204
+         MICE iter 25 -> Delta: 0.000138
+         MICE iter 26 -> Delta: 0.000094
+
+      --- Depois de Median/Mode - ainda pode faltar target ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 232
+      class_cat            ->  232 em falta (4.64%)
+
+      --- Depois de MICE - ainda pode faltar target ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 232
+      class_cat            ->  232 em falta (4.64%)
+      Atributos preenchidos por Median/Mode e MICE.
+
+[5/6] A preencher valores em falta no TARGET usando CBR/Retrieve...
+
+      Pesos usados no CBR/Retrieve:
+      temperature          -> peso 5.00
+      vibration            -> peso 5.00
+      rotation_speed       -> peso 4.00
+      voltage              -> peso 2.00
+      current              -> peso 4.00
+      pressure             -> peso 1.00
+      noise_level          -> peso 3.00
+      efficiency           -> peso 3.00
+      load_val             -> peso 3.00
+      torque               -> peso 3.00
+      maintenance_level    -> peso 3.00
+      operating_mode       -> peso 2.00
+      cooling_type         -> peso 2.00
+      sensor_status        -> peso 3.00
+
+      Tabela Median
+         Targets em falta para preencher: 232
+         CBR/Retrieve - Caso 4... similar ao caso 2427 (sim = 95.45%)
+         CBR/Retrieve - Caso 18... similar ao caso 4919 (sim = 93.45%)
+         CBR/Retrieve - Caso 64... similar ao caso 1169 (sim = 93.07%)
+         CBR/Retrieve - Caso 148... similar ao caso 4828 (sim = 92.98%)
+         CBR/Retrieve - Caso 217... similar ao caso 4971 (sim = 94.87%)
+         CBR/Retrieve - Caso 219... similar ao caso 1376 (sim = 91.59%)
+         CBR/Retrieve - Caso 245... similar ao caso 2000 (sim = 94.13%)
+         CBR/Retrieve - Caso 247... similar ao caso 2849 (sim = 95.00%)
+         CBR/Retrieve - Caso 258... similar ao caso 59 (sim = 93.22%)
+         CBR/Retrieve - Caso 286... similar ao caso 1148 (sim = 92.00%)
+         CBR/Retrieve - Caso 331... similar ao caso 1802 (sim = 96.54%)
+         CBR/Retrieve - Caso 344... similar ao caso 3895 (sim = 92.79%)
+         CBR/Retrieve - Caso 385... similar ao caso 2742 (sim = 95.61%)
+         CBR/Retrieve - Caso 402... similar ao caso 4686 (sim = 92.56%)
+         CBR/Retrieve - Caso 405... similar ao caso 2915 (sim = 90.17%)
+         CBR/Retrieve - Caso 409... similar ao caso 1951 (sim = 95.29%)
+         CBR/Retrieve - Caso 420... similar ao caso 3336 (sim = 93.93%)
+         CBR/Retrieve - Caso 431... similar ao caso 3874 (sim = 95.65%)
+         CBR/Retrieve - Caso 449... similar ao caso 2372 (sim = 93.36%)
+         CBR/Retrieve - Caso 450... similar ao caso 4534 (sim = 96.58%)
+         CBR/Retrieve - Caso 465... similar ao caso 4414 (sim = 94.70%)
+         CBR/Retrieve - Caso 480... similar ao caso 2429 (sim = 93.95%)
+         CBR/Retrieve - Caso 485... similar ao caso 4263 (sim = 91.62%)
+         CBR/Retrieve - Caso 486... similar ao caso 3178 (sim = 92.22%)
+         CBR/Retrieve - Caso 504... similar ao caso 3579 (sim = 94.89%)
+         CBR/Retrieve - Caso 510... similar ao caso 3342 (sim = 95.28%)
+         CBR/Retrieve - Caso 524... similar ao caso 1296 (sim = 93.17%)
+         CBR/Retrieve - Caso 555... similar ao caso 623 (sim = 93.49%)
+         CBR/Retrieve - Caso 565... similar ao caso 4710 (sim = 92.72%)
+         CBR/Retrieve - Caso 580... similar ao caso 1913 (sim = 92.41%)
+         CBR/Retrieve - Caso 614... similar ao caso 2865 (sim = 90.88%)
+         CBR/Retrieve - Caso 626... similar ao caso 1251 (sim = 92.74%)
+         CBR/Retrieve - Caso 693... similar ao caso 41 (sim = 93.82%)
+         CBR/Retrieve - Caso 696... similar ao caso 4042 (sim = 93.63%)
+         CBR/Retrieve - Caso 704... similar ao caso 2433 (sim = 92.06%)
+         CBR/Retrieve - Caso 710... similar ao caso 633 (sim = 91.89%)
+         CBR/Retrieve - Caso 726... similar ao caso 3921 (sim = 93.58%)
+         CBR/Retrieve - Caso 759... similar ao caso 205 (sim = 92.71%)
+         CBR/Retrieve - Caso 793... similar ao caso 1251 (sim = 91.76%)
+         CBR/Retrieve - Caso 798... similar ao caso 4487 (sim = 93.29%)
+         CBR/Retrieve - Caso 800... similar ao caso 3252 (sim = 94.24%)
+         CBR/Retrieve - Caso 807... similar ao caso 1258 (sim = 94.40%)
+         CBR/Retrieve - Caso 842... similar ao caso 1425 (sim = 89.95%)
+         CBR/Retrieve - Caso 849... similar ao caso 3413 (sim = 92.22%)
+         CBR/Retrieve - Caso 876... similar ao caso 2492 (sim = 94.57%)
+         CBR/Retrieve - Caso 896... similar ao caso 586 (sim = 92.88%)
+         CBR/Retrieve - Caso 907... similar ao caso 3831 (sim = 92.71%)
+         CBR/Retrieve - Caso 908... similar ao caso 1605 (sim = 92.76%)
+         CBR/Retrieve - Caso 982... similar ao caso 3017 (sim = 94.12%)
+         CBR/Retrieve - Caso 1060... similar ao caso 1332 (sim = 94.30%)
+         CBR/Retrieve - Caso 1062... similar ao caso 4104 (sim = 95.69%)
+         CBR/Retrieve - Caso 1090... similar ao caso 2230 (sim = 92.00%)
+         CBR/Retrieve - Caso 1108... similar ao caso 4751 (sim = 93.87%)
+         CBR/Retrieve - Caso 1125... similar ao caso 4307 (sim = 95.96%)
+         CBR/Retrieve - Caso 1131... similar ao caso 1824 (sim = 96.58%)
+         CBR/Retrieve - Caso 1161... similar ao caso 3789 (sim = 91.70%)
+         CBR/Retrieve - Caso 1178... similar ao caso 2842 (sim = 93.28%)
+         CBR/Retrieve - Caso 1184... similar ao caso 860 (sim = 90.62%)
+         CBR/Retrieve - Caso 1194... similar ao caso 3833 (sim = 93.67%)
+         CBR/Retrieve - Caso 1223... similar ao caso 2424 (sim = 92.69%)
+         CBR/Retrieve - Caso 1319... similar ao caso 1793 (sim = 93.85%)
+         CBR/Retrieve - Caso 1325... similar ao caso 4541 (sim = 94.31%)
+         CBR/Retrieve - Caso 1341... similar ao caso 772 (sim = 92.05%)
+         CBR/Retrieve - Caso 1367... similar ao caso 3223 (sim = 91.01%)
+         CBR/Retrieve - Caso 1378... similar ao caso 4643 (sim = 93.34%)
+         CBR/Retrieve - Caso 1397... similar ao caso 2251 (sim = 93.18%)
+         CBR/Retrieve - Caso 1420... similar ao caso 4914 (sim = 95.26%)
+         CBR/Retrieve - Caso 1450... similar ao caso 2229 (sim = 95.09%)
+         CBR/Retrieve - Caso 1457... similar ao caso 4148 (sim = 93.59%)
+         CBR/Retrieve - Caso 1464... similar ao caso 1878 (sim = 94.75%)
+         CBR/Retrieve - Caso 1472... similar ao caso 4497 (sim = 92.05%)
+         CBR/Retrieve - Caso 1481... similar ao caso 2789 (sim = 95.44%)
+         CBR/Retrieve - Caso 1513... similar ao caso 4781 (sim = 94.70%)
+         CBR/Retrieve - Caso 1516... similar ao caso 2540 (sim = 94.76%)
+         CBR/Retrieve - Caso 1529... similar ao caso 3211 (sim = 96.02%)
+         CBR/Retrieve - Caso 1557... similar ao caso 3874 (sim = 90.44%)
+         CBR/Retrieve - Caso 1572... similar ao caso 1063 (sim = 92.23%)
+         CBR/Retrieve - Caso 1573... similar ao caso 3978 (sim = 94.61%)
+         CBR/Retrieve - Caso 1602... similar ao caso 328 (sim = 93.00%)
+         CBR/Retrieve - Caso 1615... similar ao caso 2638 (sim = 91.76%)
+         CBR/Retrieve - Caso 1645... similar ao caso 1855 (sim = 92.77%)
+         CBR/Retrieve - Caso 1651... similar ao caso 4543 (sim = 95.16%)
+         CBR/Retrieve - Caso 1731... similar ao caso 3647 (sim = 96.04%)
+         CBR/Retrieve - Caso 1733... similar ao caso 4920 (sim = 94.14%)
+         CBR/Retrieve - Caso 1750... similar ao caso 1931 (sim = 90.50%)
+         CBR/Retrieve - Caso 1770... similar ao caso 4864 (sim = 90.28%)
+         CBR/Retrieve - Caso 1818... similar ao caso 2596 (sim = 90.21%)
+         CBR/Retrieve - Caso 1821... similar ao caso 2819 (sim = 95.76%)
+         CBR/Retrieve - Caso 1823... similar ao caso 1027 (sim = 93.46%)
+         CBR/Retrieve - Caso 1827... similar ao caso 2620 (sim = 90.76%)
+         CBR/Retrieve - Caso 1836... similar ao caso 1141 (sim = 93.28%)
+         CBR/Retrieve - Caso 1843... similar ao caso 1675 (sim = 92.70%)
+         CBR/Retrieve - Caso 1923... similar ao caso 2667 (sim = 94.17%)
+         CBR/Retrieve - Caso 1933... similar ao caso 333 (sim = 94.11%)
+         CBR/Retrieve - Caso 1969... similar ao caso 3282 (sim = 94.52%)
+         CBR/Retrieve - Caso 1977... similar ao caso 1739 (sim = 93.69%)
+         CBR/Retrieve - Caso 1979... similar ao caso 4269 (sim = 95.09%)
+         CBR/Retrieve - Caso 2055... similar ao caso 3972 (sim = 94.10%)
+         CBR/Retrieve - Caso 2062... similar ao caso 953 (sim = 95.80%)
+         CBR/Retrieve - Caso 2079... similar ao caso 2552 (sim = 94.33%)
+         CBR/Retrieve - Caso 2099... similar ao caso 1067 (sim = 95.96%)
+         CBR/Retrieve - Caso 2113... similar ao caso 4663 (sim = 93.17%)
+         CBR/Retrieve - Caso 2186... similar ao caso 2232 (sim = 88.25%)
+         CBR/Retrieve - Caso 2190... similar ao caso 4449 (sim = 92.31%)
+         CBR/Retrieve - Caso 2214... similar ao caso 2582 (sim = 89.63%)
+         CBR/Retrieve - Caso 2216... similar ao caso 358 (sim = 92.13%)
+         CBR/Retrieve - Caso 2222... similar ao caso 1853 (sim = 94.13%)
+         CBR/Retrieve - Caso 2238... similar ao caso 2542 (sim = 91.41%)
+         CBR/Retrieve - Caso 2244... similar ao caso 4202 (sim = 94.88%)
+         CBR/Retrieve - Caso 2247... similar ao caso 2596 (sim = 91.03%)
+         CBR/Retrieve - Caso 2248... similar ao caso 4267 (sim = 95.89%)
+         CBR/Retrieve - Caso 2268... similar ao caso 1370 (sim = 91.92%)
+         CBR/Retrieve - Caso 2277... similar ao caso 2593 (sim = 91.49%)
+         CBR/Retrieve - Caso 2290... similar ao caso 1729 (sim = 93.97%)
+         CBR/Retrieve - Caso 2318... similar ao caso 4921 (sim = 94.62%)
+         CBR/Retrieve - Caso 2324... similar ao caso 837 (sim = 95.11%)
+         CBR/Retrieve - Caso 2335... similar ao caso 2792 (sim = 92.69%)
+         CBR/Retrieve - Caso 2345... similar ao caso 2104 (sim = 93.51%)
+         CBR/Retrieve - Caso 2349... similar ao caso 4053 (sim = 92.62%)
+         CBR/Retrieve - Caso 2383... similar ao caso 2424 (sim = 94.12%)
+         CBR/Retrieve - Caso 2385... similar ao caso 1120 (sim = 96.20%)
+         CBR/Retrieve - Caso 2394... similar ao caso 4957 (sim = 91.91%)
+         CBR/Retrieve - Caso 2398... similar ao caso 848 (sim = 96.46%)
+         CBR/Retrieve - Caso 2452... similar ao caso 717 (sim = 92.98%)
+         CBR/Retrieve - Caso 2478... similar ao caso 2025 (sim = 94.65%)
+         CBR/Retrieve - Caso 2533... similar ao caso 2598 (sim = 93.00%)
+         CBR/Retrieve - Caso 2551... similar ao caso 349 (sim = 93.52%)
+         CBR/Retrieve - Caso 2558... similar ao caso 1475 (sim = 91.72%)
+         CBR/Retrieve - Caso 2561... similar ao caso 1508 (sim = 93.91%)
+         CBR/Retrieve - Caso 2570... similar ao caso 4218 (sim = 94.33%)
+         CBR/Retrieve - Caso 2580... similar ao caso 4191 (sim = 94.49%)
+         CBR/Retrieve - Caso 2590... similar ao caso 389 (sim = 92.69%)
+         CBR/Retrieve - Caso 2631... similar ao caso 4639 (sim = 91.50%)
+         CBR/Retrieve - Caso 2699... similar ao caso 4628 (sim = 92.83%)
+         CBR/Retrieve - Caso 2704... similar ao caso 1264 (sim = 93.54%)
+         CBR/Retrieve - Caso 2719... similar ao caso 2329 (sim = 91.32%)
+         CBR/Retrieve - Caso 2732... similar ao caso 1561 (sim = 89.59%)
+         CBR/Retrieve - Caso 2746... similar ao caso 3645 (sim = 93.26%)
+         CBR/Retrieve - Caso 2761... similar ao caso 21 (sim = 88.90%)
+         CBR/Retrieve - Caso 2773... similar ao caso 262 (sim = 92.63%)
+         CBR/Retrieve - Caso 2803... similar ao caso 4353 (sim = 93.52%)
+         CBR/Retrieve - Caso 2821... similar ao caso 3839 (sim = 93.39%)
+         CBR/Retrieve - Caso 2826... similar ao caso 4629 (sim = 94.94%)
+         CBR/Retrieve - Caso 2875... similar ao caso 1499 (sim = 90.37%)
+         CBR/Retrieve - Caso 2888... similar ao caso 2591 (sim = 89.01%)
+         CBR/Retrieve - Caso 2962... similar ao caso 1690 (sim = 91.73%)
+         CBR/Retrieve - Caso 2978... similar ao caso 3212 (sim = 91.32%)
+         CBR/Retrieve - Caso 2995... similar ao caso 4992 (sim = 94.27%)
+         CBR/Retrieve - Caso 3055... similar ao caso 4658 (sim = 91.18%)
+         CBR/Retrieve - Caso 3065... similar ao caso 2173 (sim = 91.35%)
+         CBR/Retrieve - Caso 3074... similar ao caso 4759 (sim = 94.48%)
+         CBR/Retrieve - Caso 3083... similar ao caso 3577 (sim = 95.55%)
+         CBR/Retrieve - Caso 3088... similar ao caso 3854 (sim = 94.14%)
+         CBR/Retrieve - Caso 3102... similar ao caso 2825 (sim = 92.33%)
+         CBR/Retrieve - Caso 3112... similar ao caso 1574 (sim = 90.02%)
+         CBR/Retrieve - Caso 3202... similar ao caso 2424 (sim = 91.40%)
+         CBR/Retrieve - Caso 3207... similar ao caso 506 (sim = 91.98%)
+         CBR/Retrieve - Caso 3209... similar ao caso 3281 (sim = 93.29%)
+         CBR/Retrieve - Caso 3230... similar ao caso 4499 (sim = 95.54%)
+         CBR/Retrieve - Caso 3232... similar ao caso 422 (sim = 94.49%)
+         CBR/Retrieve - Caso 3240... similar ao caso 508 (sim = 95.28%)
+         CBR/Retrieve - Caso 3259... similar ao caso 1417 (sim = 94.12%)
+         CBR/Retrieve - Caso 3283... similar ao caso 4574 (sim = 92.68%)
+         CBR/Retrieve - Caso 3284... similar ao caso 2051 (sim = 92.23%)
+         CBR/Retrieve - Caso 3297... similar ao caso 4130 (sim = 97.16%)
+         CBR/Retrieve - Caso 3397... similar ao caso 2050 (sim = 91.81%)
+         CBR/Retrieve - Caso 3499... similar ao caso 1032 (sim = 96.35%)
+         CBR/Retrieve - Caso 3517... similar ao caso 1270 (sim = 92.73%)
+         CBR/Retrieve - Caso 3538... similar ao caso 570 (sim = 95.07%)
+         CBR/Retrieve - Caso 3561... similar ao caso 2665 (sim = 94.47%)
+         CBR/Retrieve - Caso 3621... similar ao caso 1300 (sim = 94.91%)
+         CBR/Retrieve - Caso 3695... similar ao caso 3017 (sim = 94.95%)
+         CBR/Retrieve - Caso 3719... similar ao caso 4658 (sim = 93.98%)
+         CBR/Retrieve - Caso 3807... similar ao caso 3007 (sim = 88.81%)
+         CBR/Retrieve - Caso 3830... similar ao caso 2642 (sim = 91.47%)
+         CBR/Retrieve - Caso 3851... similar ao caso 1581 (sim = 91.28%)
+         CBR/Retrieve - Caso 3889... similar ao caso 37 (sim = 91.86%)
+         CBR/Retrieve - Caso 3912... similar ao caso 1507 (sim = 93.14%)
+         CBR/Retrieve - Caso 3930... similar ao caso 2341 (sim = 91.63%)
+         CBR/Retrieve - Caso 3980... similar ao caso 2675 (sim = 95.24%)
+         CBR/Retrieve - Caso 4017... similar ao caso 3197 (sim = 90.74%)
+         CBR/Retrieve - Caso 4018... similar ao caso 229 (sim = 93.18%)
+         CBR/Retrieve - Caso 4088... similar ao caso 3523 (sim = 94.92%)
+         CBR/Retrieve - Caso 4126... similar ao caso 330 (sim = 91.99%)
+         CBR/Retrieve - Caso 4139... similar ao caso 4871 (sim = 95.09%)
+         CBR/Retrieve - Caso 4140... similar ao caso 2229 (sim = 93.95%)
+         CBR/Retrieve - Caso 4145... similar ao caso 3894 (sim = 92.13%)
+         CBR/Retrieve - Caso 4174... similar ao caso 2612 (sim = 94.46%)
+         CBR/Retrieve - Caso 4196... similar ao caso 4843 (sim = 91.01%)
+         CBR/Retrieve - Caso 4205... similar ao caso 2841 (sim = 93.66%)
+         CBR/Retrieve - Caso 4219... similar ao caso 2241 (sim = 90.55%)
+         CBR/Retrieve - Caso 4258... similar ao caso 12 (sim = 94.60%)
+         CBR/Retrieve - Caso 4289... similar ao caso 2453 (sim = 95.02%)
+         CBR/Retrieve - Caso 4297... similar ao caso 503 (sim = 95.01%)
+         CBR/Retrieve - Caso 4314... similar ao caso 447 (sim = 92.95%)
+         CBR/Retrieve - Caso 4334... similar ao caso 422 (sim = 93.16%)
+         CBR/Retrieve - Caso 4338... similar ao caso 2917 (sim = 92.03%)
+         CBR/Retrieve - Caso 4347... similar ao caso 3718 (sim = 94.94%)
+         CBR/Retrieve - Caso 4369... similar ao caso 2404 (sim = 93.63%)
+         CBR/Retrieve - Caso 4411... similar ao caso 4264 (sim = 95.27%)
+         CBR/Retrieve - Caso 4448... similar ao caso 1164 (sim = 91.44%)
+         CBR/Retrieve - Caso 4485... similar ao caso 225 (sim = 91.75%)
+         CBR/Retrieve - Caso 4491... similar ao caso 746 (sim = 93.86%)
+         CBR/Retrieve - Caso 4550... similar ao caso 1007 (sim = 96.68%)
+         CBR/Retrieve - Caso 4556... similar ao caso 2348 (sim = 92.27%)
+         CBR/Retrieve - Caso 4563... similar ao caso 2402 (sim = 92.72%)
+         CBR/Retrieve - Caso 4565... similar ao caso 2483 (sim = 93.59%)
+         CBR/Retrieve - Caso 4576... similar ao caso 1051 (sim = 93.17%)
+         CBR/Retrieve - Caso 4579... similar ao caso 1637 (sim = 91.82%)
+         CBR/Retrieve - Caso 4609... similar ao caso 1524 (sim = 91.13%)
+         CBR/Retrieve - Caso 4615... similar ao caso 3292 (sim = 92.84%)
+         CBR/Retrieve - Caso 4619... similar ao caso 1922 (sim = 91.07%)
+         CBR/Retrieve - Caso 4622... similar ao caso 1382 (sim = 92.95%)
+         CBR/Retrieve - Caso 4641... similar ao caso 1440 (sim = 93.75%)
+         CBR/Retrieve - Caso 4656... similar ao caso 231 (sim = 91.51%)
+         CBR/Retrieve - Caso 4696... similar ao caso 2520 (sim = 93.25%)
+         CBR/Retrieve - Caso 4707... similar ao caso 200 (sim = 92.59%)
+         CBR/Retrieve - Caso 4719... similar ao caso 1213 (sim = 96.22%)
+         CBR/Retrieve - Caso 4730... similar ao caso 1363 (sim = 95.34%)
+         CBR/Retrieve - Caso 4757... similar ao caso 222 (sim = 93.75%)
+         CBR/Retrieve - Caso 4764... similar ao caso 3546 (sim = 94.68%)
+         CBR/Retrieve - Caso 4778... similar ao caso 4768 (sim = 92.65%)
+         CBR/Retrieve - Caso 4784... similar ao caso 4182 (sim = 89.09%)
+         CBR/Retrieve - Caso 4799... similar ao caso 3587 (sim = 95.08%)
+         CBR/Retrieve - Caso 4807... similar ao caso 1962 (sim = 92.74%)
+         CBR/Retrieve - Caso 4808... similar ao caso 1779 (sim = 94.55%)
+         CBR/Retrieve - Caso 4838... similar ao caso 781 (sim = 92.96%)
+         CBR/Retrieve - Caso 4840... similar ao caso 2543 (sim = 92.71%)
+         CBR/Retrieve - Caso 4845... similar ao caso 532 (sim = 94.65%)
+         CBR/Retrieve - Caso 4942... similar ao caso 2032 (sim = 94.21%)
+         CBR/Retrieve - Caso 4948... similar ao caso 4931 (sim = 93.59%)
+         CBR/Retrieve - Caso 4998... similar ao caso 4335 (sim = 94.86%)
+         Ficheiro guardado: ./OUTPUT_3.1_TRATAMENTO/Median/out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+
+      --- Depois do preenchimento do target - Median ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 0
+      Sem valores em falta.
+
+      Tabela MICE
+         Targets em falta para preencher: 232
+         CBR/Retrieve - Caso 4... similar ao caso 3222 (sim = 95.94%)
+         CBR/Retrieve - Caso 18... similar ao caso 4919 (sim = 92.77%)
+         CBR/Retrieve - Caso 64... similar ao caso 2987 (sim = 92.80%)
+         CBR/Retrieve - Caso 148... similar ao caso 4173 (sim = 92.33%)
+         CBR/Retrieve - Caso 217... similar ao caso 4971 (sim = 94.87%)
+         CBR/Retrieve - Caso 219... similar ao caso 3864 (sim = 91.57%)
+         CBR/Retrieve - Caso 245... similar ao caso 3480 (sim = 93.43%)
+         CBR/Retrieve - Caso 247... similar ao caso 4234 (sim = 96.75%)
+         CBR/Retrieve - Caso 258... similar ao caso 1772 (sim = 93.62%)
+         CBR/Retrieve - Caso 286... similar ao caso 533 (sim = 93.16%)
+         CBR/Retrieve - Caso 331... similar ao caso 2301 (sim = 96.70%)
+         CBR/Retrieve - Caso 344... similar ao caso 3895 (sim = 92.62%)
+         CBR/Retrieve - Caso 385... similar ao caso 761 (sim = 94.87%)
+         CBR/Retrieve - Caso 402... similar ao caso 3778 (sim = 93.18%)
+         CBR/Retrieve - Caso 405... similar ao caso 1271 (sim = 90.21%)
+         CBR/Retrieve - Caso 409... similar ao caso 4914 (sim = 95.87%)
+         CBR/Retrieve - Caso 420... similar ao caso 3336 (sim = 92.58%)
+         CBR/Retrieve - Caso 431... similar ao caso 3380 (sim = 93.68%)
+         CBR/Retrieve - Caso 449... similar ao caso 1372 (sim = 94.27%)
+         CBR/Retrieve - Caso 450... similar ao caso 631 (sim = 94.15%)
+         CBR/Retrieve - Caso 465... similar ao caso 3290 (sim = 91.74%)
+         CBR/Retrieve - Caso 480... similar ao caso 2480 (sim = 93.65%)
+         CBR/Retrieve - Caso 485... similar ao caso 2194 (sim = 92.43%)
+         CBR/Retrieve - Caso 486... similar ao caso 3178 (sim = 92.91%)
+         CBR/Retrieve - Caso 504... similar ao caso 3579 (sim = 94.89%)
+         CBR/Retrieve - Caso 510... similar ao caso 3342 (sim = 95.25%)
+         CBR/Retrieve - Caso 524... similar ao caso 1296 (sim = 93.25%)
+         CBR/Retrieve - Caso 555... similar ao caso 145 (sim = 95.57%)
+         CBR/Retrieve - Caso 565... similar ao caso 593 (sim = 92.02%)
+         CBR/Retrieve - Caso 580... similar ao caso 225 (sim = 94.33%)
+         CBR/Retrieve - Caso 614... similar ao caso 2865 (sim = 90.87%)
+         CBR/Retrieve - Caso 626... similar ao caso 3986 (sim = 96.12%)
+         CBR/Retrieve - Caso 693... similar ao caso 41 (sim = 94.08%)
+         CBR/Retrieve - Caso 696... similar ao caso 618 (sim = 96.52%)
+         CBR/Retrieve - Caso 704... similar ao caso 4666 (sim = 93.08%)
+         CBR/Retrieve - Caso 710... similar ao caso 633 (sim = 90.76%)
+         CBR/Retrieve - Caso 726... similar ao caso 248 (sim = 93.77%)
+         CBR/Retrieve - Caso 759... similar ao caso 4752 (sim = 92.49%)
+         CBR/Retrieve - Caso 793... similar ao caso 3573 (sim = 93.29%)
+         CBR/Retrieve - Caso 798... similar ao caso 1607 (sim = 95.02%)
+         CBR/Retrieve - Caso 800... similar ao caso 448 (sim = 93.65%)
+         CBR/Retrieve - Caso 807... similar ao caso 4323 (sim = 94.49%)
+         CBR/Retrieve - Caso 842... similar ao caso 3380 (sim = 93.29%)
+         CBR/Retrieve - Caso 849... similar ao caso 3559 (sim = 92.32%)
+         CBR/Retrieve - Caso 876... similar ao caso 4458 (sim = 94.42%)
+         CBR/Retrieve - Caso 896... similar ao caso 586 (sim = 94.37%)
+         CBR/Retrieve - Caso 907... similar ao caso 3831 (sim = 93.03%)
+         CBR/Retrieve - Caso 908... similar ao caso 2675 (sim = 92.46%)
+         CBR/Retrieve - Caso 982... similar ao caso 2683 (sim = 96.09%)
+         CBR/Retrieve - Caso 1060... similar ao caso 2855 (sim = 96.24%)
+         CBR/Retrieve - Caso 1062... similar ao caso 4104 (sim = 95.69%)
+         CBR/Retrieve - Caso 1090... similar ao caso 4633 (sim = 91.07%)
+         CBR/Retrieve - Caso 1108... similar ao caso 1595 (sim = 93.97%)
+         CBR/Retrieve - Caso 1125... similar ao caso 4307 (sim = 95.30%)
+         CBR/Retrieve - Caso 1131... similar ao caso 1824 (sim = 96.27%)
+         CBR/Retrieve - Caso 1161... similar ao caso 3789 (sim = 92.61%)
+         CBR/Retrieve - Caso 1178... similar ao caso 3025 (sim = 93.32%)
+         CBR/Retrieve - Caso 1184... similar ao caso 860 (sim = 91.72%)
+         CBR/Retrieve - Caso 1194... similar ao caso 910 (sim = 95.81%)
+         CBR/Retrieve - Caso 1223... similar ao caso 2424 (sim = 92.03%)
+         CBR/Retrieve - Caso 1319... similar ao caso 1793 (sim = 94.07%)
+         CBR/Retrieve - Caso 1325... similar ao caso 1951 (sim = 94.19%)
+         CBR/Retrieve - Caso 1341... similar ao caso 1283 (sim = 91.67%)
+         CBR/Retrieve - Caso 1367... similar ao caso 17 (sim = 94.37%)
+         CBR/Retrieve - Caso 1378... similar ao caso 4643 (sim = 93.64%)
+         CBR/Retrieve - Caso 1397... similar ao caso 1027 (sim = 93.26%)
+         CBR/Retrieve - Caso 1420... similar ao caso 1633 (sim = 94.17%)
+         CBR/Retrieve - Caso 1450... similar ao caso 2229 (sim = 95.09%)
+         CBR/Retrieve - Caso 1457... similar ao caso 30 (sim = 93.79%)
+         CBR/Retrieve - Caso 1464... similar ao caso 460 (sim = 95.52%)
+         CBR/Retrieve - Caso 1472... similar ao caso 131 (sim = 94.03%)
+         CBR/Retrieve - Caso 1481... similar ao caso 3151 (sim = 96.08%)
+         CBR/Retrieve - Caso 1513... similar ao caso 4781 (sim = 94.53%)
+         CBR/Retrieve - Caso 1516... similar ao caso 4458 (sim = 93.41%)
+         CBR/Retrieve - Caso 1529... similar ao caso 3211 (sim = 96.02%)
+         CBR/Retrieve - Caso 1557... similar ao caso 2884 (sim = 92.79%)
+         CBR/Retrieve - Caso 1572... similar ao caso 1063 (sim = 92.35%)
+         CBR/Retrieve - Caso 1573... similar ao caso 3978 (sim = 95.09%)
+         CBR/Retrieve - Caso 1602... similar ao caso 2026 (sim = 91.45%)
+         CBR/Retrieve - Caso 1615... similar ao caso 2602 (sim = 94.19%)
+         CBR/Retrieve - Caso 1645... similar ao caso 1855 (sim = 93.72%)
+         CBR/Retrieve - Caso 1651... similar ao caso 4973 (sim = 94.92%)
+         CBR/Retrieve - Caso 1731... similar ao caso 3647 (sim = 96.04%)
+         CBR/Retrieve - Caso 1733... similar ao caso 1793 (sim = 92.73%)
+         CBR/Retrieve - Caso 1750... similar ao caso 367 (sim = 90.04%)
+         CBR/Retrieve - Caso 1770... similar ao caso 4320 (sim = 91.88%)
+         CBR/Retrieve - Caso 1818... similar ao caso 2596 (sim = 91.88%)
+         CBR/Retrieve - Caso 1821... similar ao caso 2819 (sim = 95.76%)
+         CBR/Retrieve - Caso 1823... similar ao caso 1027 (sim = 95.06%)
+         CBR/Retrieve - Caso 1827... similar ao caso 2620 (sim = 90.76%)
+         CBR/Retrieve - Caso 1836... similar ao caso 1141 (sim = 94.03%)
+         CBR/Retrieve - Caso 1843... similar ao caso 1675 (sim = 92.63%)
+         CBR/Retrieve - Caso 1923... similar ao caso 2667 (sim = 94.06%)
+         CBR/Retrieve - Caso 1933... similar ao caso 2269 (sim = 93.40%)
+         CBR/Retrieve - Caso 1969... similar ao caso 2095 (sim = 95.02%)
+         CBR/Retrieve - Caso 1977... similar ao caso 1231 (sim = 94.51%)
+         CBR/Retrieve - Caso 1979... similar ao caso 4277 (sim = 92.36%)
+         CBR/Retrieve - Caso 2055... similar ao caso 3972 (sim = 93.98%)
+         CBR/Retrieve - Caso 2062... similar ao caso 2600 (sim = 95.75%)
+         CBR/Retrieve - Caso 2079... similar ao caso 776 (sim = 94.94%)
+         CBR/Retrieve - Caso 2099... similar ao caso 1067 (sim = 94.71%)
+         CBR/Retrieve - Caso 2113... similar ao caso 4383 (sim = 93.49%)
+         CBR/Retrieve - Caso 2186... similar ao caso 4162 (sim = 89.85%)
+         CBR/Retrieve - Caso 2190... similar ao caso 399 (sim = 93.51%)
+         CBR/Retrieve - Caso 2214... similar ao caso 1631 (sim = 90.94%)
+         CBR/Retrieve - Caso 2216... similar ao caso 358 (sim = 91.56%)
+         CBR/Retrieve - Caso 2222... similar ao caso 4783 (sim = 96.85%)
+         CBR/Retrieve - Caso 2238... similar ao caso 3920 (sim = 93.35%)
+         CBR/Retrieve - Caso 2244... similar ao caso 4202 (sim = 95.41%)
+         CBR/Retrieve - Caso 2247... similar ao caso 2596 (sim = 89.25%)
+         CBR/Retrieve - Caso 2248... similar ao caso 4267 (sim = 95.57%)
+         CBR/Retrieve - Caso 2268... similar ao caso 2731 (sim = 90.91%)
+         CBR/Retrieve - Caso 2277... similar ao caso 4945 (sim = 95.72%)
+         CBR/Retrieve - Caso 2290... similar ao caso 1729 (sim = 93.90%)
+         CBR/Retrieve - Caso 2318... similar ao caso 2604 (sim = 95.15%)
+         CBR/Retrieve - Caso 2324... similar ao caso 3086 (sim = 95.67%)
+         CBR/Retrieve - Caso 2335... similar ao caso 1723 (sim = 93.28%)
+         CBR/Retrieve - Caso 2345... similar ao caso 2104 (sim = 95.64%)
+         CBR/Retrieve - Caso 2349... similar ao caso 1698 (sim = 91.24%)
+         CBR/Retrieve - Caso 2383... similar ao caso 2424 (sim = 94.65%)
+         CBR/Retrieve - Caso 2385... similar ao caso 2095 (sim = 95.63%)
+         CBR/Retrieve - Caso 2394... similar ao caso 4957 (sim = 91.95%)
+         CBR/Retrieve - Caso 2398... similar ao caso 848 (sim = 96.46%)
+         CBR/Retrieve - Caso 2452... similar ao caso 717 (sim = 92.14%)
+         CBR/Retrieve - Caso 2478... similar ao caso 1309 (sim = 92.35%)
+         CBR/Retrieve - Caso 2533... similar ao caso 1637 (sim = 94.14%)
+         CBR/Retrieve - Caso 2551... similar ao caso 2129 (sim = 92.87%)
+         CBR/Retrieve - Caso 2558... similar ao caso 1475 (sim = 92.89%)
+         CBR/Retrieve - Caso 2561... similar ao caso 396 (sim = 92.85%)
+         CBR/Retrieve - Caso 2570... similar ao caso 3098 (sim = 94.26%)
+         CBR/Retrieve - Caso 2580... similar ao caso 266 (sim = 95.26%)
+         CBR/Retrieve - Caso 2590... similar ao caso 2899 (sim = 94.92%)
+         CBR/Retrieve - Caso 2631... similar ao caso 4639 (sim = 92.30%)
+         CBR/Retrieve - Caso 2699... similar ao caso 4628 (sim = 92.55%)
+         CBR/Retrieve - Caso 2704... similar ao caso 1264 (sim = 92.23%)
+         CBR/Retrieve - Caso 2719... similar ao caso 2329 (sim = 91.32%)
+         CBR/Retrieve - Caso 2732... similar ao caso 1867 (sim = 91.69%)
+         CBR/Retrieve - Caso 2746... similar ao caso 3348 (sim = 92.66%)
+         CBR/Retrieve - Caso 2761... similar ao caso 21 (sim = 86.13%)
+         CBR/Retrieve - Caso 2773... similar ao caso 262 (sim = 92.63%)
+         CBR/Retrieve - Caso 2803... similar ao caso 4275 (sim = 93.70%)
+         CBR/Retrieve - Caso 2821... similar ao caso 4005 (sim = 94.04%)
+         CBR/Retrieve - Caso 2826... similar ao caso 4629 (sim = 93.41%)
+         CBR/Retrieve - Caso 2875... similar ao caso 3683 (sim = 89.27%)
+         CBR/Retrieve - Caso 2888... similar ao caso 2591 (sim = 89.28%)
+         CBR/Retrieve - Caso 2962... similar ao caso 1690 (sim = 91.72%)
+         CBR/Retrieve - Caso 2978... similar ao caso 3212 (sim = 94.43%)
+         CBR/Retrieve - Caso 2995... similar ao caso 74 (sim = 92.54%)
+         CBR/Retrieve - Caso 3055... similar ao caso 4561 (sim = 90.91%)
+         CBR/Retrieve - Caso 3065... similar ao caso 2726 (sim = 91.60%)
+         CBR/Retrieve - Caso 3074... similar ao caso 4759 (sim = 94.48%)
+         CBR/Retrieve - Caso 3083... similar ao caso 3375 (sim = 96.05%)
+         CBR/Retrieve - Caso 3088... similar ao caso 3854 (sim = 94.14%)
+         CBR/Retrieve - Caso 3102... similar ao caso 2442 (sim = 95.37%)
+         CBR/Retrieve - Caso 3112... similar ao caso 3423 (sim = 91.59%)
+         CBR/Retrieve - Caso 3202... similar ao caso 3918 (sim = 91.61%)
+         CBR/Retrieve - Caso 3207... similar ao caso 1584 (sim = 91.18%)
+         CBR/Retrieve - Caso 3209... similar ao caso 556 (sim = 94.53%)
+         CBR/Retrieve - Caso 3230... similar ao caso 4499 (sim = 95.57%)
+         CBR/Retrieve - Caso 3232... similar ao caso 422 (sim = 94.99%)
+         CBR/Retrieve - Caso 3240... similar ao caso 508 (sim = 94.92%)
+         CBR/Retrieve - Caso 3259... similar ao caso 1417 (sim = 93.10%)
+         CBR/Retrieve - Caso 3283... similar ao caso 4116 (sim = 89.95%)
+         CBR/Retrieve - Caso 3284... similar ao caso 2684 (sim = 93.82%)
+         CBR/Retrieve - Caso 3297... similar ao caso 4130 (sim = 96.58%)
+         CBR/Retrieve - Caso 3397... similar ao caso 2050 (sim = 91.68%)
+         CBR/Retrieve - Caso 3499... similar ao caso 1032 (sim = 96.36%)
+         CBR/Retrieve - Caso 3517... similar ao caso 3285 (sim = 93.24%)
+         CBR/Retrieve - Caso 3538... similar ao caso 3305 (sim = 95.43%)
+         CBR/Retrieve - Caso 3561... similar ao caso 1029 (sim = 93.87%)
+         CBR/Retrieve - Caso 3621... similar ao caso 1300 (sim = 95.60%)
+         CBR/Retrieve - Caso 3695... similar ao caso 1278 (sim = 95.99%)
+         CBR/Retrieve - Caso 3719... similar ao caso 1714 (sim = 95.45%)
+         CBR/Retrieve - Caso 3807... similar ao caso 1332 (sim = 91.02%)
+         CBR/Retrieve - Caso 3830... similar ao caso 3015 (sim = 91.26%)
+         CBR/Retrieve - Caso 3851... similar ao caso 1581 (sim = 93.82%)
+         CBR/Retrieve - Caso 3889... similar ao caso 209 (sim = 92.05%)
+         CBR/Retrieve - Caso 3912... similar ao caso 3061 (sim = 91.26%)
+         CBR/Retrieve - Caso 3930... similar ao caso 2341 (sim = 91.18%)
+         CBR/Retrieve - Caso 3980... similar ao caso 992 (sim = 94.15%)
+         CBR/Retrieve - Caso 4017... similar ao caso 2363 (sim = 92.52%)
+         CBR/Retrieve - Caso 4018... similar ao caso 3677 (sim = 91.20%)
+         CBR/Retrieve - Caso 4088... similar ao caso 1255 (sim = 95.62%)
+         CBR/Retrieve - Caso 4126... similar ao caso 330 (sim = 91.99%)
+         CBR/Retrieve - Caso 4139... similar ao caso 4871 (sim = 94.36%)
+         CBR/Retrieve - Caso 4140... similar ao caso 2229 (sim = 93.95%)
+         CBR/Retrieve - Caso 4145... similar ao caso 809 (sim = 93.41%)
+         CBR/Retrieve - Caso 4174... similar ao caso 4223 (sim = 96.39%)
+         CBR/Retrieve - Caso 4196... similar ao caso 3421 (sim = 91.90%)
+         CBR/Retrieve - Caso 4205... similar ao caso 4275 (sim = 92.75%)
+         CBR/Retrieve - Caso 4219... similar ao caso 1508 (sim = 90.76%)
+         CBR/Retrieve - Caso 4258... similar ao caso 2221 (sim = 93.00%)
+         CBR/Retrieve - Caso 4289... similar ao caso 1797 (sim = 94.11%)
+         CBR/Retrieve - Caso 4297... similar ao caso 503 (sim = 97.02%)
+         CBR/Retrieve - Caso 4314... similar ao caso 2702 (sim = 92.26%)
+         CBR/Retrieve - Caso 4334... similar ao caso 1566 (sim = 94.11%)
+         CBR/Retrieve - Caso 4338... similar ao caso 3672 (sim = 93.23%)
+         CBR/Retrieve - Caso 4347... similar ao caso 2992 (sim = 94.72%)
+         CBR/Retrieve - Caso 4369... similar ao caso 2286 (sim = 92.98%)
+         CBR/Retrieve - Caso 4411... similar ao caso 4264 (sim = 94.84%)
+         CBR/Retrieve - Caso 4448... similar ao caso 1164 (sim = 91.44%)
+         CBR/Retrieve - Caso 4485... similar ao caso 1625 (sim = 93.03%)
+         CBR/Retrieve - Caso 4491... similar ao caso 746 (sim = 93.33%)
+         CBR/Retrieve - Caso 4550... similar ao caso 1566 (sim = 94.80%)
+         CBR/Retrieve - Caso 4556... similar ao caso 3643 (sim = 93.41%)
+         CBR/Retrieve - Caso 4563... similar ao caso 1314 (sim = 92.92%)
+         CBR/Retrieve - Caso 4565... similar ao caso 2528 (sim = 94.21%)
+         CBR/Retrieve - Caso 4576... similar ao caso 4427 (sim = 95.52%)
+         CBR/Retrieve - Caso 4579... similar ao caso 3018 (sim = 90.43%)
+         CBR/Retrieve - Caso 4609... similar ao caso 4829 (sim = 93.02%)
+         CBR/Retrieve - Caso 4615... similar ao caso 3292 (sim = 92.84%)
+         CBR/Retrieve - Caso 4619... similar ao caso 3837 (sim = 94.14%)
+         CBR/Retrieve - Caso 4622... similar ao caso 3811 (sim = 92.77%)
+         CBR/Retrieve - Caso 4641... similar ao caso 1440 (sim = 93.34%)
+         CBR/Retrieve - Caso 4656... similar ao caso 1429 (sim = 94.15%)
+         CBR/Retrieve - Caso 4696... similar ao caso 1644 (sim = 92.84%)
+         CBR/Retrieve - Caso 4707... similar ao caso 200 (sim = 92.59%)
+         CBR/Retrieve - Caso 4719... similar ao caso 1213 (sim = 95.94%)
+         CBR/Retrieve - Caso 4730... similar ao caso 1363 (sim = 95.34%)
+         CBR/Retrieve - Caso 4757... similar ao caso 3710 (sim = 94.46%)
+         CBR/Retrieve - Caso 4764... similar ao caso 2817 (sim = 95.02%)
+         CBR/Retrieve - Caso 4778... similar ao caso 4768 (sim = 92.40%)
+         CBR/Retrieve - Caso 4784... similar ao caso 1512 (sim = 90.02%)
+         CBR/Retrieve - Caso 4799... similar ao caso 2204 (sim = 97.87%)
+         CBR/Retrieve - Caso 4807... similar ao caso 3981 (sim = 95.06%)
+         CBR/Retrieve - Caso 4808... similar ao caso 2473 (sim = 91.20%)
+         CBR/Retrieve - Caso 4838... similar ao caso 781 (sim = 93.97%)
+         CBR/Retrieve - Caso 4840... similar ao caso 4908 (sim = 91.42%)
+         CBR/Retrieve - Caso 4845... similar ao caso 1465 (sim = 95.46%)
+         CBR/Retrieve - Caso 4942... similar ao caso 4285 (sim = 94.45%)
+         CBR/Retrieve - Caso 4948... similar ao caso 4931 (sim = 94.49%)
+         CBR/Retrieve - Caso 4998... similar ao caso 4058 (sim = 94.29%)
+         Ficheiro guardado: ./OUTPUT_3.1_TRATAMENTO/MICE/out2_dataset_TP_IMPUTED_ORIG_MICE.xlsx
+
+      --- Depois do preenchimento do target - MICE ---
+      Dimensao: 5000 linhas x 15 colunas
+      Total de valores em falta: 0
+      Sem valores em falta.
+
+[6/6] A guardar parametros de normalizacao e datasets normalizados...
+      Median: parametros e dataset normalizado guardados.
+      MICE: parametros e dataset normalizado guardados.
+
+======================================================
+ TP 3.1 concluido sem erros.
+ Output criado em: ./OUTPUT_3.1_TRATAMENTO/
+======================================================
+
+FASE 1 concluida com sucesso.
+Tempo da fase: 00h 00m 19s
+Tempo acumulado: 00h 00m 19s
+
+
+======================================================
+ FASE 2/7
+ Script: tp_3_2_b_CBR_testes.m
+ Objetivo: Testes automaticos do CBR
+======================================================
+
+
+======================================================
+ TP 3.2.b - TESTES DO CBR
+======================================================
+
+[1/5] A localizar ficheiros gerados no tratamento 3.1...
+      Dataset de teste encontrado:
+      C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Common\out_dataset_TP_test_num.xlsx
+
+[SETUP] Configuracao comum carregada.
+        Linhas treino      : 30
+        Total de colunas   : 15
+        Atributos numericos: 10
+        Atributos categor. : 4
+        Target             : class_cat
+        Pasta de output    : ./OUTPUT_3.2.b_CBR_TESTS/
+      Pasta de output: ./OUTPUT_3.2.b_CBR_TESTS/
+      Total de casos de teste: 30
+      Atributos usados: 14
+      Target: class_cat
+
+[2/5] A preparar configuracoes de teste...
+      Tipos de imputacao: Median, MICE
+      Tipos de dados: ORIG, NORM
+      Conjuntos de pesos: w, w2, 1s, soCat
+
+[3/5] A executar testes CBR...
+
+------------------------------------------------------
+ Imputacao: Median
+------------------------------------------------------
+      Dataset treino: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+      Parametros norm.: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out4_dataset_TP_NORM_PARAMS_Median.mat
+
+      Tipo de dados: ORIG
+
+      Teste CBR: Median - ORIG - pesos w
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.87%
+          Similaridade minima: 89.74%
+          Similaridade media: 93.76%
+          Similaridade desvPad: 1.92%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_ORIG_w.xlsx
+
+      Teste CBR: Median - ORIG - pesos w2
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 97.05%
+          Similaridade minima: 89.87%
+          Similaridade media: 94.09%
+          Similaridade desvPad: 1.77%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_ORIG_w2.xlsx
+
+      Teste CBR: Median - ORIG - pesos 1s
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.36%
+          Similaridade minima: 90.05%
+          Similaridade media: 93.87%
+          Similaridade desvPad: 1.76%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_ORIG_1s.xlsx
+
+      Teste CBR: Median - ORIG - pesos soCat
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 50.00%
+          Similaridade maxima: 100.00%
+          Similaridade minima: 100.00%
+          Similaridade media: 100.00%
+          Similaridade desvPad: 0.00%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_ORIG_soCat.xlsx
+
+      Tipo de dados: NORM
+      A normalizar atributos numericos...
+
+      Teste CBR: Median - NORM - pesos w
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.87%
+          Similaridade minima: 89.74%
+          Similaridade media: 93.76%
+          Similaridade desvPad: 1.92%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_NORM_w.xlsx
+
+      Teste CBR: Median - NORM - pesos w2
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 97.05%
+          Similaridade minima: 89.87%
+          Similaridade media: 94.09%
+          Similaridade desvPad: 1.77%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_NORM_w2.xlsx
+
+      Teste CBR: Median - NORM - pesos 1s
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.36%
+          Similaridade minima: 90.05%
+          Similaridade media: 93.87%
+          Similaridade desvPad: 1.76%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_NORM_1s.xlsx
+
+      Teste CBR: Median - NORM - pesos soCat
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 50.00%
+          Similaridade maxima: 100.00%
+          Similaridade minima: 100.00%
+          Similaridade media: 100.00%
+          Similaridade desvPad: 0.00%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/Median/out_Median_NORM_soCat.xlsx
+
+------------------------------------------------------
+ Imputacao: MICE
+------------------------------------------------------
+      Dataset treino: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\MICE\out2_dataset_TP_IMPUTED_ORIG_MICE.xlsx
+      Parametros norm.: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\MICE\out4_dataset_TP_NORM_PARAMS_MICE.mat
+
+      Tipo de dados: ORIG
+
+      Teste CBR: MICE - ORIG - pesos w
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.87%
+          Similaridade minima: 89.74%
+          Similaridade media: 93.65%
+          Similaridade desvPad: 1.95%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_ORIG_w.xlsx
+
+      Teste CBR: MICE - ORIG - pesos w2
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 97.05%
+          Similaridade minima: 90.15%
+          Similaridade media: 93.92%
+          Similaridade desvPad: 1.80%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_ORIG_w2.xlsx
+
+      Teste CBR: MICE - ORIG - pesos 1s
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.60%
+          Similaridade minima: 89.69%
+          Similaridade media: 93.69%
+          Similaridade desvPad: 1.86%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_ORIG_1s.xlsx
+
+      Teste CBR: MICE - ORIG - pesos soCat
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 36.67%
+          Similaridade maxima: 100.00%
+          Similaridade minima: 100.00%
+          Similaridade media: 100.00%
+          Similaridade desvPad: 0.00%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_ORIG_soCat.xlsx
+
+      Tipo de dados: NORM
+      A normalizar atributos numericos...
+
+      Teste CBR: MICE - NORM - pesos w
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.87%
+          Similaridade minima: 89.74%
+          Similaridade media: 93.65%
+          Similaridade desvPad: 1.95%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_NORM_w.xlsx
+
+      Teste CBR: MICE - NORM - pesos w2
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 97.05%
+          Similaridade minima: 90.15%
+          Similaridade media: 93.92%
+          Similaridade desvPad: 1.80%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_NORM_w2.xlsx
+
+      Teste CBR: MICE - NORM - pesos 1s
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 100.00%
+          Similaridade maxima: 96.60%
+          Similaridade minima: 89.69%
+          Similaridade media: 93.69%
+          Similaridade desvPad: 1.86%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_NORM_1s.xlsx
+
+      Teste CBR: MICE - NORM - pesos soCat
+          Casos testados: 25/30
+          Casos testados: 30/30
+          Taxa de acerto: 36.67%
+          Similaridade maxima: 100.00%
+          Similaridade minima: 100.00%
+          Similaridade media: 100.00%
+          Similaridade desvPad: 0.00%
+          Guardado: ./OUTPUT_3.2.b_CBR_TESTS/MICE/out_MICE_NORM_soCat.xlsx
+
+[4/5] A guardar tabela resumo...
+      Resumo guardado: ./OUTPUT_3.2.b_CBR_TESTS/Common/Resultados_CBR.xlsx
+
+[5/5] A gerar grafico resumo...
+      Grafico guardado: ./OUTPUT_3.2.b_CBR_TESTS/Common/plot_Resumo_Testes_CBR.png
+
+======================================================
+ TP 3.2.b concluido sem erros.
+======================================================
+
+FASE 2 concluida com sucesso.
+Tempo da fase: 00h 00m 02s
+Tempo acumulado: 00h 00m 21s
+
+
+======================================================
+ FASE 3/7
+ Script: tp_3_3_a_RN_implementacao.m
+ Objetivo: Estudo parametrico das Redes Neuronais
+======================================================
+
+
+======================================================
+ TP 3.3.a - ESTUDO PARAMETRICO DAS REDES NEURONAIS
+======================================================
+
+[INFO] Modo rapido: 0
+[INFO] Pasta de output: OUTPUT_3.3.a_RN_IMPL
+
+[1/6] A preparar projeto e funcoes auxiliares...
+      Pasta do projeto: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2
+      Funcoes auxiliares carregadas.
+
+[2/6] A definir configuracoes do estudo...
+      Imputacoes: Median, MICE
+      Tipo de dados: NORM
+      Topologias: 6
+      Funcoes de treino: trainlm, traingd, trainbr, trainscg
+      Funcoes de saida: purelin, tansig, logsig, softmax
+      Divisoes treino/validacao/teste: 3
+      Valores max_fail: [2 6 20]
+      Total de configuracoes: 1728
+      Repeticoes por configuracao: 10
+
+[3/6] A preparar output e nomes das colunas...
+
+[SETUP] Configuracao comum carregada.
+        Linhas treino      : 5000
+        Total de colunas   : 15
+        Atributos numericos: 10
+        Atributos categor. : 4
+        Target             : class_cat
+        Pasta de output    : ./OUTPUT_3.3.a_RN_IMPL/
+      Dataset base encontrado: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+      Atributos de entrada: 14
+      Target: class_cat
+      Output: ./OUTPUT_3.3.a_RN_IMPL/
+
+[4/6] A executar estudo parametrico...
+
+------------------------------------------------------
+ IMPUTACAO: Median
+------------------------------------------------------
+      Dataset: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+      Parametros normalizacao: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out4_dataset_TP_NORM_PARAMS_Median.mat
+      Colunas target binarias: Normal, MechanicalFailure, ElectricalFailure
+
+      Tipo de dados: NORM
+      A normalizar atributos de entrada...
+      Dimensao inputs: 5000 casos x 14 atributos
+      Dimensao targets: 5000 casos x 3 classes
+
+[1/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 98.93%
+      Repeticao 3/10... acc teste = 99.87%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.47%
+      Repeticao 8/10... acc teste = 99.73%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 98.80%
+      Media acc global: 99.79%
+      Media acc teste : 99.48%
+      Media erro teste: 0.2538
+
+[2/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.07%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.80%
+      Media acc teste : 99.43%
+      Media erro teste: 0.3247
+
+[3/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF20_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.33%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.20%
+      Repeticao 7/10... acc teste = 99.47%
+      Repeticao 8/10... acc teste = 99.47%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.85%
+      Media acc teste : 99.49%
+      Media erro teste: 0.2671
+
+[4/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF2_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.50%
+      Repeticao 3/10... acc teste = 99.70%
+      Repeticao 4/10... acc teste = 99.50%
+      Repeticao 5/10... acc teste = 99.30%
+      Repeticao 6/10... acc teste = 99.80%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.50%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.79%
+      Media acc teste : 99.53%
+      Media erro teste: 0.2726
+
+[5/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.40%
+      Repeticao 2/10... acc teste = 99.40%
+      Repeticao 3/10... acc teste = 99.80%
+      Repeticao 4/10... acc teste = 99.70%
+      Repeticao 5/10... acc teste = 99.40%
+      Repeticao 6/10... acc teste = 99.30%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.40%
+      Repeticao 9/10... acc teste = 99.80%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.79%
+      Media acc teste : 99.54%
+      Media erro teste: 0.2671
+
+[6/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF20_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.20%
+      Repeticao 3/10... acc teste = 99.80%
+      Repeticao 4/10... acc teste = 99.40%
+      Repeticao 5/10... acc teste = 99.50%
+      Repeticao 6/10... acc teste = 99.30%
+      Repeticao 7/10... acc teste = 99.70%
+      Repeticao 8/10... acc teste = 99.90%
+      Repeticao 9/10... acc teste = 99.20%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.79%
+      Media acc teste : 99.48%
+      Media erro teste: 0.3065
+
+[7/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF2_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.79%
+      Media acc teste : 99.68%
+      Media erro teste: 0.4557
+
+[8/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF6_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 98.80%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.92%
+      Media acc teste : 99.60%
+      Media erro teste: 0.2195
+
+[9/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_purelin_MF20_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... <a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nnderivative\+nnMex\perfsJEJJ.m',21,1)">21  </a>trainPerf = Perfs(1);
+acc teste = 98.40%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.91%
+      Media acc teste : 99.56%
+      Media erro teste: 0.2896
+
+[10/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 99.33%
+      Repeticao 8/10... acc teste = 99.07%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 99.83%
+      Media acc teste : 99.57%
+      Media erro teste: 0.2792
+
+[11/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.47%
+      Repeticao 2/10... acc teste = 99.20%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.33%
+      Repeticao 6/10... acc teste = 99.33%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.82%
+      Media acc teste : 99.43%
+      Media erro teste: 0.2917
+
+[12/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF20_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.87%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.73%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.73%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 99.87%
+      Media acc teste : 99.72%
+      Media erro teste: 0.2088
+
+[13/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF2_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.70%
+      Repeticao 2/10... acc teste = 99.70%
+      Repeticao 3/10... acc teste = 99.10%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.30%
+      Repeticao 6/10... acc teste = 99.70%
+      Repeticao 7/10... acc teste = 99.40%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.40%
+      Repeticao 10/10... acc teste = 99.10%
+      Media acc global: 99.83%
+      Media acc teste : 99.46%
+      Media erro teste: 0.3212
+
+[14/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.70%
+      Repeticao 2/10... acc teste = 99.40%
+      Repeticao 3/10... acc teste = 99.50%
+      Repeticao 4/10... acc teste = 99.50%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 99.20%
+      Repeticao 7/10... acc teste = 99.10%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.80%
+      Media acc teste : 99.55%
+      Media erro teste: 0.2899
+
+[15/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF20_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.50%
+      Repeticao 4/10... acc teste = 99.50%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.40%
+      Repeticao 7/10... acc teste = 99.80%
+      Repeticao 8/10... acc teste = 99.00%
+      Repeticao 9/10... acc teste = 99.10%
+      Repeticao 10/10... acc teste = 99.40%
+      Media acc global: 99.80%
+      Media acc teste : 99.41%
+      Media erro teste: 0.3279
+
+[16/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF2_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.20%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.20%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.90%
+      Media acc teste : 99.64%
+      Media erro teste: 0.2327
+
+[17/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF6_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.20%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.92%
+      Media acc teste : 99.56%
+      Media erro teste: 0.2544
+
+[18/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_tansig_MF20_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 98.80%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 98.40%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 98.80%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.90%
+      Media acc teste : 99.24%
+      Media erro teste: 0.4349
+
+[19/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.87%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.87%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 99.33%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.78%
+      Media acc teste : 99.65%
+      Media erro teste: 16.7650
+
+[20/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.33%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 99.82%
+      Media acc teste : 99.51%
+      Media erro teste: 16.7901
+
+[21/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF20_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.47%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 99.47%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.47%
+      Repeticao 7/10... acc teste = 99.47%
+      Repeticao 8/10... acc teste = 99.87%
+      Repeticao 9/10... acc teste = 99.47%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.83%
+      Media acc teste : 99.53%
+      Media erro teste: 16.7922
+
+[22/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF2_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.90%
+      Repeticao 2/10... acc teste = 99.50%
+      Repeticao 3/10... acc teste = 69.00%
+      Repeticao 4/10... acc teste = 99.80%
+      Repeticao 5/10... acc teste = 99.10%
+      Repeticao 6/10... acc teste = 99.30%
+      Repeticao 7/10... acc teste = 99.50%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 63.60%
+      Media acc global: 93.25%
+      Media acc teste : 92.89%
+      Media erro teste: 17.3621
+
+[23/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 65.30%
+      Repeticao 2/10... acc teste = 99.70%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.30%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.50%
+      Repeticao 8/10... acc teste = 99.10%
+      Repeticao 9/10... acc teste = 99.40%
+      Repeticao 10/10... acc teste = 99.80%
+      Media acc global: 96.58%
+      Media acc teste : 96.09%
+      Media erro teste: 17.1024
+
+[24/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF20_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.40%
+      Repeticao 2/10... acc teste = 68.30%
+      Repeticao 3/10... acc teste = 99.70%
+      Repeticao 4/10... acc teste = 99.30%
+      Repeticao 5/10... acc teste = 66.60%
+      Repeticao 6/10... acc teste = 99.30%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.80%
+      Media acc global: 93.29%
+      Media acc teste : 93.16%
+      Media erro teste: 17.3287
+
+[25/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF2_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 98.80%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 98.80%
+      Repeticao 7/10... acc teste = 67.20%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.20%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 96.42%
+      Media acc teste : 96.20%
+      Media erro teste: 17.0931
+
+[26/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF6_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.20%
+      Repeticao 3/10... acc teste = 98.80%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.20%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.82%
+      Media acc teste : 99.52%
+      Media erro teste: 16.7893
+
+[27/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF20_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.20%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 91.20%
+      Repeticao 8/10... acc teste = 98.40%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 98.00%
+      Media acc global: 98.67%
+      Media acc teste : 98.44%
+      Media erro teste: 17.0964
+
+[28/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.20%
+      Repeticao 3/10... acc teste = 99.33%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.07%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.73%
+      Repeticao 8/10... acc teste = 99.73%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.33%
+      Media acc global: 99.71%
+      Media acc teste : 99.48%
+      Media erro teste: 16.8421
+
+[29/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.33%
+      Repeticao 6/10... acc teste = 99.07%
+      Repeticao 7/10... acc teste = 99.73%
+      Repeticao 8/10... acc teste = 99.33%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 99.79%
+      Media acc teste : 99.40%
+      Media erro teste: 16.8606
+
+[30/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF20_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.20%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.73%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.33%
+      Repeticao 9/10... acc teste = 99.47%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 99.85%
+      Media acc teste : 99.53%
+      Media erro teste: 16.8235
+
+[31/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF2_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.50%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.40%
+      Repeticao 6/10... acc teste = 99.30%
+      Repeticao 7/10... acc teste = 99.50%
+      Repeticao 8/10... acc teste = 99.50%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.10%
+      Media acc global: 99.69%
+      Media acc teste : 99.43%
+      Media erro teste: 16.8438
+
+[32/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.50%
+      Repeticao 3/10... acc teste = 99.40%
+      Repeticao 4/10... acc teste = 99.50%
+      Repeticao 5/10... acc teste = 99.50%
+      Repeticao 6/10... acc teste = 99.80%
+      Repeticao 7/10... acc teste = 99.30%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 99.76%
+      Media acc teste : 99.56%
+      Media erro teste: 16.8259
+
+[33/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF20_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.40%
+      Repeticao 2/10... acc teste = 99.70%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 99.70%
+      Repeticao 5/10... acc teste = 99.70%
+      Repeticao 6/10... acc teste = 99.50%
+      Repeticao 7/10... acc teste = 99.40%
+      Repeticao 8/10... acc teste = 99.50%
+      Repeticao 9/10... acc teste = 99.20%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.78%
+      Media acc teste : 99.56%
+      Media erro teste: 16.8189
+
+[34/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF2_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 98.40%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.69%
+      Media acc teste : 99.72%
+      Media erro teste: 16.7738
+
+[35/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF6_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 98.80%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.20%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.20%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 98.80%
+      Media acc global: 99.70%
+      Media acc teste : 99.32%
+      Media erro teste: 16.8953
+
+[36/1728] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF20_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 98.80%
+      Media acc global: 99.82%
+      Media acc teste : 99.56%
+      Media erro teste: 16.7955
+
+[37/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 98.27%
+      Repeticao 2/10... acc teste = 97.47%
+      Repeticao 3/10... acc teste = 97.73%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.33%
+      Repeticao 6/10... acc teste = 97.60%
+      Repeticao 7/10... acc teste = 98.80%
+      Repeticao 8/10... acc teste = 98.53%
+      Repeticao 9/10... acc teste = 98.67%
+      Repeticao 10/10... acc teste = 98.80%
+      Media acc global: 98.50%
+      Media acc teste : 98.44%
+      Media erro teste: 3.4279
+
+[38/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 98.80%
+      Repeticao 2/10... acc teste = 98.13%
+      Repeticao 3/10... acc teste = 98.40%
+      Repeticao 4/10... acc teste = 98.27%
+      Repeticao 5/10... acc teste = 98.93%
+      Repeticao 6/10... acc teste = 97.87%
+      Repeticao 7/10... acc teste = 98.80%
+      Repeticao 8/10... acc teste = 98.80%
+      Repeticao 9/10... acc teste = 98.27%
+      Repeticao 10/10... acc teste = 97.47%
+      Media acc global: 98.54%
+      Media acc teste : 98.37%
+      Media erro teste: 3.2805
+
+[39/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF20_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 98.53%
+      Repeticao 2/10... acc teste = 98.80%
+      Repeticao 3/10... acc teste = 98.93%
+      Repeticao 4/10... acc teste = 97.60%
+      Repeticao 5/10... acc teste = 98.13%
+      Repeticao 6/10... acc teste = 98.13%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 96.93%
+      Repeticao 9/10... acc teste = 98.13%
+      Repeticao 10/10... acc teste = 98.93%
+      Media acc global: 98.29%
+      Media acc teste : 98.33%
+      Media erro teste: 3.3859
+
+[40/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF2_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 97.90%
+      Repeticao 2/10... acc teste = 97.70%
+      Repeticao 3/10... acc teste = 98.20%
+      Repeticao 4/10... acc teste = 98.10%
+      Repeticao 5/10... acc teste = 98.00%
+      Repeticao 6/10... acc teste = 99.00%
+      Repeticao 7/10... acc teste = 98.10%
+      Repeticao 8/10... acc teste = 98.60%
+      Repeticao 9/10... acc teste = 98.40%
+      Repeticao 10/10... acc teste = 98.10%
+      Media acc global: 98.24%
+      Media acc teste : 98.21%
+      Media erro teste: 3.5494
+
+[41/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 98.50%
+      Repeticao 2/10... acc teste = 98.00%
+      Repeticao 3/10... acc teste = 98.40%
+      Repeticao 4/10... acc teste = 98.40%
+      Repeticao 5/10... acc teste = 98.60%
+      Repeticao 6/10... acc teste = 97.40%
+      Repeticao 7/10... acc teste = 96.60%
+      Repeticao 8/10... acc teste = 98.00%
+      Repeticao 9/10... acc teste = 98.70%
+      Repeticao 10/10... acc teste = 98.60%
+      Media acc global: 98.42%
+      Media acc teste : 98.12%
+      Media erro teste: 3.6551
+
+[42/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF20_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 98.60%
+      Repeticao 2/10... acc teste = 97.30%
+      Repeticao 3/10... acc teste = 98.90%
+      Repeticao 4/10... acc teste = 98.60%
+      Repeticao 5/10... acc teste = 98.30%
+      Repeticao 6/10... acc teste = 98.40%
+      Repeticao 7/10... acc teste = 96.80%
+      Repeticao 8/10... acc teste = 97.80%
+      Repeticao 9/10... acc teste = 98.30%
+      Repeticao 10/10... acc teste = 98.90%
+      Media acc global: 98.19%
+      Media acc teste : 98.19%
+      Media erro teste: 3.5503
+
+[43/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF2_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 98.40%
+      Repeticao 3/10... acc teste = 99.20%
+      Repeticao 4/10... acc teste = 98.00%
+      Repeticao 5/10... acc teste = 97.60%
+      Repeticao 6/10... acc teste = 97.20%
+      Repeticao 7/10... acc teste = 98.00%
+      Repeticao 8/10... acc teste = 98.80%
+      Repeticao 9/10... acc teste = 98.40%
+      Repeticao 10/10... acc teste = 97.60%
+      Media acc global: 98.33%
+      Media acc teste : 98.24%
+      Media erro teste: 3.5036
+
+[44/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF6_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 98.00%
+      Repeticao 2/10... acc teste = 96.40%
+      Repeticao 3/10... acc teste = 98.00%
+      Repeticao 4/10... acc teste = 97.60%
+      Repeticao 5/10... acc teste = 98.40%
+      Repeticao 6/10... acc teste = 98.80%
+      Repeticao 7/10... acc teste = 98.80%
+      Repeticao 8/10... acc teste = 97.60%
+      Repeticao 9/10... acc teste = 98.40%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 98.29%
+      Media acc teste : 98.16%
+      Media erro teste: 3.4810
+
+[45/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_purelin_MF20_Div-0.9-0.05-0.05
+      Repeticao 1/10... acc teste = 98.80%
+      Repeticao 2/10... acc teste = 98.80%
+      Repeticao 3/10... acc teste = 97.20%
+      Repeticao 4/10... acc teste = 98.80%
+      Repeticao 5/10... acc teste = 98.00%
+      Repeticao 6/10... acc teste = 98.00%
+      Repeticao 7/10... acc teste = 97.60%
+      Repeticao 8/10... acc teste = 98.40%
+      Repeticao 9/10... acc teste = 99.20%
+      Repeticao 10/10... acc teste = 97.20%
+      Media acc global: 98.22%
+      Media acc teste : 98.20%
+      Media erro teste: 3.5260
+
+[46/1728] Configuracao: RN_Median_NORM_Topo-10_traingd_tansig_MF2_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 97.87%
+      Repeticao 2/10... acc teste = 98.53%
+      Repeticao 3/10... acc teste = 98.27%
+      Repeticao 4/10... {Operation terminated by user during <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('nnMex.perfsGrad', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nnderivative\+nnMex\perfsGrad.m', 9)" style="font-weight:bold">nnMex.perfsGrad</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nnderivative\+nnMex\perfsGrad.m',9,0)">line 9</a>)
+
+
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('nnCalcLib/perfsGrad', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nnderivative\nnCalcLib.m', 294)" style="font-weight:bold">nnCalcLib/perfsGrad</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nnderivative\nnCalcLib.m',294,0)">line 294</a>)
+                lib.calcMode.perfsGrad(calcNet,lib.calcData,lib.calcHints);
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('traingd>trainingIteration', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m', 231)" style="font-weight:bold">traingd>trainingIteration</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m',231,0)">line 231</a>)
+[worker.perf,worker.vperf,worker.tperf,worker.gWB,worker.gradient] = calcLib.perfsGrad(calcNet);
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('nnet.train.trainNetwork>trainingLoop', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m', 76)" style="font-weight:bold">nnet.train.trainNetwork>trainingLoop</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m',76,0)">line 76</a>)
+        [worker,calcNet] = localFcns.trainingIteration(worker,calcLib,calcNet);
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('nnet.train.trainNetwork>trainNetworkInMainThread', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m', 52)" style="font-weight:bold">nnet.train.trainNetwork>trainNetworkInMainThread</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m',52,0)">line 52</a>)
+    [archNet,tr] = trainingLoop(worker,archNet,rawData,calcLib,calcNet,feedback,localFcns);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('nnet.train.trainNetwork', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m', 27)" style="font-weight:bold">nnet.train.trainNetwork</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\+nnet\+train\trainNetwork.m',27,0)">line 27</a>)
+    [archNet,tr] = trainNetworkInMainThread(archNet,rawData,calcLib,calcNet,tr,feedback,localFcns);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('traingd>train_network', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m', 140)" style="font-weight:bold">traingd>train_network</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m',140,0)">line 140</a>)
+[archNet,tr] = nnet.train.trainNetwork(archNet,rawData,calcLib,calcNet,tr,localfunctions);
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('traingd', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m', 53)" style="font-weight:bold">traingd</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\nntrain\traingd.m',53,0)">line 53</a>)
+            [out1,out2] = train_network(varargin{2:end});
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('network/train', 'C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\@network\train.m', 374)" style="font-weight:bold">network/train</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\nnet\nnshallow\nncore\@network\train.m',374,0)">line 374</a>)
+    [net,tr] = feval(trainFcn,'apply',net,data,calcLib,calcNet,tr);
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('tp_func_feedforwardNN', 'C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\functions\tp_func_feedforwardNN.m', 83)" style="font-weight:bold">tp_func_feedforwardNN</a> (<a href="matlab: opentoline('C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\functions\tp_func_feedforwardNN.m',83,0)">line 83</a>)
+    [net, tr] = train(net, inp_layer, out_layer);
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('tp_3_3_a_RN_implementacao', 'C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\tp_3_3_a_RN_implementacao.m', 332)" style="font-weight:bold">tp_3_3_a_RN_implementacao</a> (<a href="matlab: opentoline('C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\tp_3_3_a_RN_implementacao.m',332,0)">line 332</a>)
+                                        nn_ff_out = nn_ff(nn_case, ~mostrar_janelas_treino, gerar_figuras_treino);
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run', 'C:\Program Files\MATLAB\R2025b\toolbox\matlab\lang\run.m', 112)" style="font-weight:bold">run</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2025b\toolbox\matlab\lang\run.m',112,0)">line 112</a>)
+evalin('caller', strcat(scriptStem, ';'));
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('tp_main_run_all', 'C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\tp_main_run_all.m', 160)" style="font-weight:bold">tp_main_run_all</a> (<a href="matlab: opentoline('C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\tp_main_run_all.m',160,0)">line 160</a>)
+            evalin('base', "run('" + script_file + "')");
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+tp_3_3_a_RN_implementacao
+
+======================================================
+ TP 3.3.a - ESTUDO PARAMETRICO DAS REDES NEURONAIS
+======================================================
+
+[INFO] Modo rapido: 0
+[INFO] Pasta de output: OUTPUT_3.3.a_RN_IMPL
+
+[1/6] A preparar projeto e funcoes auxiliares...
+      Pasta do projeto: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2
+      Funcoes auxiliares carregadas.
+
+[2/6] A definir configuracoes do estudo...
+      Imputacoes: Median, MICE
+      Tipo de dados: NORM
+      Topologias: 3
+      Funcoes de treino: trainlm, trainscg
+      Funcoes de saida: logsig, softmax
+      Divisoes treino/validacao/teste: 2
+      Valores max_fail: 6
+      Total de configuracoes: 48
+      Repeticoes por configuracao: 10
+
+[3/6] A preparar output e nomes das colunas...
+
+[SETUP] Configuracao comum carregada.
+        Linhas treino      : 5000
+        Total de colunas   : 15
+        Atributos numericos: 10
+        Atributos categor. : 4
+        Target             : class_cat
+        Pasta de output    : ./OUTPUT_3.3.a_RN_IMPL/
+      Dataset base encontrado: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+      Atributos de entrada: 14
+      Target: class_cat
+      Output: ./OUTPUT_3.3.a_RN_IMPL/
+
+[4/6] A executar estudo parametrico...
+
+------------------------------------------------------
+ IMPUTACAO: Median
+------------------------------------------------------
+      Dataset: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out2_dataset_TP_IMPUTED_ORIG_Median.xlsx
+      Parametros normalizacao: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\Median\out4_dataset_TP_NORM_PARAMS_Median.mat
+      Colunas target binarias: Normal, MechanicalFailure, ElectricalFailure
+
+      Tipo de dados: NORM
+      A normalizar atributos de entrada...
+      Dimensao inputs: 5000 casos x 14 atributos
+      Dimensao targets: 5000 casos x 3 classes
+
+[1/48] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.07%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 99.33%
+      Media acc global: 99.81%
+      Media acc teste : 99.48%
+      Media erro teste: 16.8033
+
+[2/48] Configuracao: RN_Median_NORM_Topo-10_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.10%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.50%
+      Repeticao 4/10... acc teste = 99.60%
+      Repeticao 5/10... acc teste = 99.70%
+      Repeticao 6/10... acc teste = 99.70%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 99.75%
+      Media acc teste : 99.54%
+      Media erro teste: 16.7771
+
+[3/48] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 99.33%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.87%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 99.47%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.33%
+      Repeticao 9/10... acc teste = 99.47%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.74%
+      Media acc teste : 99.60%
+      Media erro teste: 16.8044
+
+[4/48] Configuracao: RN_Median_NORM_Topo-10_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.50%
+      Repeticao 2/10... acc teste = 99.80%
+      Repeticao 3/10... acc teste = 99.50%
+      Repeticao 4/10... acc teste = 99.10%
+      Repeticao 5/10... acc teste = 99.30%
+      Repeticao 6/10... acc teste = 99.50%
+      Repeticao 7/10... acc teste = 99.80%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.70%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.77%
+      Media acc teste : 99.54%
+      Media erro teste: 16.8145
+
+[5/48] Configuracao: RN_Median_NORM_Topo-10_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 66.93%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 68.80%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 90.53%
+      Repeticao 6/10... acc teste = 99.47%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 99.87%
+      Repeticao 9/10... acc teste = 65.33%
+      Repeticao 10/10... acc teste = 99.20%
+      Media acc global: 88.85%
+      Media acc teste : 88.91%
+      Media erro teste: 17.8950
+
+[6/48] Configuracao: RN_Median_NORM_Topo-10_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 68.80%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.30%
+      Repeticao 4/10... acc teste = 75.30%
+      Repeticao 5/10... acc teste = 99.30%
+      Repeticao 6/10... acc teste = 99.50%
+      Repeticao 7/10... acc teste = 99.50%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.90%
+      Repeticao 10/10... acc teste = 99.80%
+      Media acc global: 94.28%
+      Media acc teste : 94.06%
+      Media erro teste: 17.3520
+
+[7/48] Configuracao: RN_Median_NORM_Topo-10_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.20%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 68.13%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.20%
+      Repeticao 7/10... acc teste = 99.87%
+      Repeticao 8/10... acc teste = 99.33%
+      Repeticao 9/10... acc teste = 98.93%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 96.36%
+      Media acc teste : 96.28%
+      Media erro teste: 17.8999
+
+[8/48] Configuracao: RN_Median_NORM_Topo-10_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.70%
+      Repeticao 2/10... acc teste = 69.40%
+      Repeticao 3/10... acc teste = 99.30%
+      Repeticao 4/10... acc teste = 99.70%
+      Repeticao 5/10... acc teste = 99.70%
+      Repeticao 6/10... acc teste = 99.70%
+      Repeticao 7/10... acc teste = 99.70%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 99.90%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 96.44%
+      Media acc teste : 96.56%
+      Media erro teste: 17.6852
+
+[9/48] Configuracao: RN_Median_NORM_Topo-5-5_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 33.47%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 64.40%
+      Repeticao 5/10... acc teste = 67.87%
+      Repeticao 6/10... acc teste = 99.47%
+      Repeticao 7/10... acc teste = 99.20%
+      Repeticao 8/10... acc teste = 99.47%
+      Repeticao 9/10... acc teste = 66.00%
+      Repeticao 10/10... acc teste = 66.27%
+      Media acc global: 79.81%
+      Media acc teste : 79.53%
+      Media erro teste: 18.4555
+
+[10/48] Configuracao: RN_Median_NORM_Topo-5-5_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 68.40%
+      Repeticao 2/10... acc teste = 99.10%
+      Repeticao 3/10... acc teste = 99.70%
+      Repeticao 4/10... acc teste = 67.20%
+      Repeticao 5/10... acc teste = 67.70%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 67.00%
+      Repeticao 8/10... acc teste = 57.50%
+      Repeticao 9/10... acc teste = 34.80%
+      Repeticao 10/10... acc teste = 99.50%
+      Media acc global: 75.76%
+      Media acc teste : 76.05%
+      Media erro teste: 18.9135
+
+[11/48] Configuracao: RN_Median_NORM_Topo-5-5_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.47%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.60%
+      Repeticao 8/10... acc teste = 99.20%
+      Repeticao 9/10... acc teste = 98.93%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.67%
+      Media acc teste : 99.51%
+      Media erro teste: 16.8255
+
+[12/48] Configuracao: RN_Median_NORM_Topo-5-5_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.90%
+      Repeticao 3/10... acc teste = 99.10%
+      Repeticao 4/10... acc teste = 99.40%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.40%
+      Repeticao 7/10... acc teste = 99.40%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.40%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 99.72%
+      Media acc teste : 99.47%
+      Media erro teste: 16.8438
+
+[13/48] Configuracao: RN_Median_NORM_Topo-5-5_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 35.87%
+      Repeticao 2/10... acc teste = 99.33%
+      Repeticao 3/10... acc teste = 99.47%
+      Repeticao 4/10... acc teste = 57.60%
+      Repeticao 5/10... acc teste = 66.80%
+      Repeticao 6/10... acc teste = 34.13%
+      Repeticao 7/10... acc teste = 99.87%
+      Repeticao 8/10... acc teste = 66.93%
+      Repeticao 9/10... acc teste = 33.33%
+      Repeticao 10/10... acc teste = 68.00%
+      Media acc global: 65.88%
+      Media acc teste : 66.13%
+      Media erro teste: 20.0738
+
+[14/48] Configuracao: RN_Median_NORM_Topo-5-5_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 60.50%
+      Repeticao 2/10... acc teste = 33.90%
+      Repeticao 3/10... acc teste = 98.90%
+      Repeticao 4/10... acc teste = 33.80%
+      Repeticao 5/10... acc teste = 62.50%
+      Repeticao 6/10... acc teste = 99.40%
+      Repeticao 7/10... acc teste = 66.60%
+      Repeticao 8/10... acc teste = 66.20%
+      Repeticao 9/10... acc teste = 66.20%
+      Repeticao 10/10... acc teste = 65.20%
+      Media acc global: 65.81%
+      Media acc teste : 65.32%
+      Media erro teste: 20.9646
+
+[15/48] Configuracao: RN_Median_NORM_Topo-5-5_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.33%
+      Repeticao 3/10... acc teste = 98.53%
+      Repeticao 4/10... acc teste = 99.47%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.47%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.33%
+      Media acc global: 99.74%
+      Media acc teste : 99.40%
+      Media erro teste: 16.8767
+
+[16/48] Configuracao: RN_Median_NORM_Topo-5-5_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.40%
+      Repeticao 2/10... acc teste = 99.00%
+      Repeticao 3/10... acc teste = 98.90%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 99.60%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.10%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 99.70%
+      Repeticao 10/10... acc teste = 99.70%
+      Media acc global: 99.62%
+      Media acc teste : 99.46%
+      Media erro teste: 16.8691
+
+[17/48] Configuracao: RN_Median_NORM_Topo-14_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.47%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.20%
+      Repeticao 4/10... acc teste = 99.47%
+      Repeticao 5/10... acc teste = 99.33%
+      Repeticao 6/10... acc teste = 99.47%
+      Repeticao 7/10... acc teste = 99.73%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.73%
+      Media acc global: 99.78%
+      Media acc teste : 99.56%
+      Media erro teste: 16.7782
+
+[18/48] Configuracao: RN_Median_NORM_Topo-14_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 65.90%
+      Repeticao 2/10... acc teste = 99.80%
+      Repeticao 3/10... acc teste = 99.80%
+      Repeticao 4/10... acc teste = 99.40%
+      Repeticao 5/10... acc teste = 99.10%
+      Repeticao 6/10... acc teste = 99.70%
+      Repeticao 7/10... acc teste = 99.70%
+      Repeticao 8/10... acc teste = 99.50%
+      Repeticao 9/10... acc teste = 99.60%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 96.45%
+      Media acc teste : 96.18%
+      Media erro teste: 17.0624
+
+[19/48] Configuracao: RN_Median_NORM_Topo-14_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.33%
+      Repeticao 4/10... acc teste = 99.73%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.33%
+      Repeticao 7/10... acc teste = 99.47%
+      Repeticao 8/10... acc teste = 99.87%
+      Repeticao 9/10... acc teste = 99.33%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 99.83%
+      Media acc teste : 99.52%
+      Media erro teste: 16.8188
+
+[20/48] Configuracao: RN_Median_NORM_Topo-14_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.40%
+      Repeticao 3/10... acc teste = 99.30%
+      Repeticao 4/10... acc teste = 99.30%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 99.20%
+      Repeticao 7/10... acc teste = 99.40%
+      Repeticao 8/10... acc teste = 99.40%
+      Repeticao 9/10... acc teste = 99.40%
+      Repeticao 10/10... acc teste = 99.80%
+      Media acc global: 99.72%
+      Media acc teste : 99.47%
+      Media erro teste: 16.8501
+
+[21/48] Configuracao: RN_Median_NORM_Topo-14_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.33%
+      Repeticao 5/10... acc teste = 99.33%
+      Repeticao 6/10... acc teste = 99.33%
+      Repeticao 7/10... acc teste = 64.40%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.33%
+      Repeticao 10/10... acc teste = 99.47%
+      Media acc global: 96.43%
+      Media acc teste : 96.04%
+      Media erro teste: 17.0830
+
+[22/48] Configuracao: RN_Median_NORM_Topo-14_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 66.30%
+      Repeticao 3/10... acc teste = 99.40%
+      Repeticao 4/10... acc teste = 99.40%
+      Repeticao 5/10... acc teste = 99.50%
+      Repeticao 6/10... acc teste = 67.90%
+      Repeticao 7/10... acc teste = 99.30%
+      Repeticao 8/10... acc teste = 99.80%
+      Repeticao 9/10... acc teste = 99.50%
+      Repeticao 10/10... acc teste = 99.30%
+      Media acc global: 93.11%
+      Media acc teste : 93.00%
+      Media erro teste: 17.6533
+
+[23/48] Configuracao: RN_Median_NORM_Topo-14_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.60%
+      Repeticao 2/10... acc teste = 99.47%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.73%
+      Repeticao 5/10... acc teste = 99.47%
+      Repeticao 6/10... acc teste = 99.73%
+      Repeticao 7/10... acc teste = 99.73%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 99.33%
+      Repeticao 10/10... acc teste = 99.60%
+      Media acc global: 99.82%
+      Media acc teste : 99.60%
+      Media erro teste: 16.8212
+
+[24/48] Configuracao: RN_Median_NORM_Topo-14_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.10%
+      Repeticao 2/10... acc teste = 99.60%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.20%
+      Repeticao 5/10... acc teste = 99.40%
+      Repeticao 6/10... acc teste = 99.60%
+      Repeticao 7/10... acc teste = 99.50%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 99.50%
+      Repeticao 10/10... acc teste = 99.40%
+      Media acc global: 99.77%
+      Media acc teste : 99.46%
+      Media erro teste: 16.8421
+
+------------------------------------------------------
+ IMPUTACAO: MICE
+------------------------------------------------------
+      Dataset: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\MICE\out2_dataset_TP_IMPUTED_ORIG_MICE.xlsx
+      Parametros normalizacao: C:\Users\gramo\OneDrive - ISEC\ISEC_24_25\CR_2025_2026\Prática\MATLAB\Trabalho 1\Ttrabalho Miguel 2\OUTPUT_3.1_TRATAMENTO\MICE\out4_dataset_TP_NORM_PARAMS_MICE.mat
+      Colunas target binarias: Normal, MechanicalFailure, ElectricalFailure
+
+      Tipo de dados: NORM
+      A normalizar atributos de entrada...
+      Dimensao inputs: 5000 casos x 14 atributos
+      Dimensao targets: 5000 casos x 3 classes
+
+[25/48] Configuracao: RN_MICE_NORM_Topo-10_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.87%
+      Repeticao 2/10... acc teste = 99.87%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.87%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.87%
+      Media acc global: 99.97%
+      Media acc teste : 99.93%
+      Media erro teste: 16.6850
+
+[26/48] Configuracao: RN_MICE_NORM_Topo-10_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.80%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.80%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.80%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.80%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.97%
+      Media acc teste : 99.90%
+      Media erro teste: 16.6888
+
+[27/48] Configuracao: RN_MICE_NORM_Topo-10_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 99.87%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 99.73%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.87%
+      Media acc global: 99.97%
+      Media acc teste : 99.91%
+      Media erro teste: 16.7029
+
+[28/48] Configuracao: RN_MICE_NORM_Topo-10_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.90%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.90%
+      Repeticao 9/10... acc teste = 99.80%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.96%
+      Media acc teste : 99.91%
+      Media erro teste: 16.6963
+
+[29/48] Configuracao: RN_MICE_NORM_Topo-10_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 68.40%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 87.47%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 66.40%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 68.53%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 70.27%
+      Media acc global: 85.79%
+      Media acc teste : 86.04%
+      Media erro teste: 18.0790
+
+[30/48] Configuracao: RN_MICE_NORM_Topo-10_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.90%
+      Repeticao 3/10... acc teste = 67.90%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 71.10%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 66.00%
+      Media acc global: 90.15%
+      Media acc teste : 90.46%
+      Media erro teste: 17.4951
+
+[31/48] Configuracao: RN_MICE_NORM_Topo-10_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 99.73%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.87%
+      Media acc global: 99.98%
+      Media acc teste : 99.91%
+      Media erro teste: 16.6977
+
+[32/48] Configuracao: RN_MICE_NORM_Topo-10_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.90%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.80%
+      Repeticao 6/10... acc teste = 99.80%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.97%
+      Media acc teste : 99.92%
+      Media erro teste: 16.6907
+
+[33/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.73%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.73%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 67.73%
+      Repeticao 7/10... acc teste = 67.60%
+      Repeticao 8/10... acc teste = 66.67%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 89.88%
+      Media acc teste : 90.12%
+      Media erro teste: 17.5159
+
+[34/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 67.70%
+      Repeticao 2/10... acc teste = 99.80%
+      Repeticao 3/10... acc teste = 67.10%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 65.20%
+      Repeticao 8/10... acc teste = 66.30%
+      Repeticao 9/10... acc teste = 99.90%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 86.62%
+      Media acc teste : 86.60%
+      Media erro teste: 17.7984
+
+[35/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.73%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.73%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.73%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.93%
+      Media acc teste : 99.91%
+      Media erro teste: 16.7021
+
+[36/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.70%
+      Repeticao 2/10... acc teste = 99.80%
+      Repeticao 3/10... acc teste = 99.60%
+      Repeticao 4/10... acc teste = 99.70%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 99.50%
+      Repeticao 9/10... acc teste = 99.90%
+      Repeticao 10/10... acc teste = 99.80%
+      Media acc global: 99.88%
+      Media acc teste : 99.78%
+      Media erro teste: 16.7374
+
+[37/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 67.60%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 65.33%
+      Repeticao 4/10... acc teste = 64.67%
+      Repeticao 5/10... acc teste = 36.80%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.87%
+      Repeticao 8/10... acc teste = 30.67%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 76.50%
+      Media acc teste : 76.48%
+      Media erro teste: 19.4865
+
+[38/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 65.80%
+      Repeticao 2/10... acc teste = 69.20%
+      Repeticao 3/10... acc teste = 66.80%
+      Repeticao 4/10... acc teste = 65.90%
+      Repeticao 5/10... acc teste = 67.30%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.60%
+      Repeticao 9/10... acc teste = 67.40%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 79.86%
+      Media acc teste : 80.18%
+      Media erro teste: 18.8854
+
+[39/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.87%
+      Repeticao 2/10... acc teste = 99.87%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 99.73%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 99.87%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 99.07%
+      Media acc global: 99.93%
+      Media acc teste : 99.80%
+      Media erro teste: 16.7327
+
+[40/48] Configuracao: RN_MICE_NORM_Topo-5-5_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.70%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.96%
+      Media acc teste : 99.94%
+      Media erro teste: 16.6949
+
+[41/48] Configuracao: RN_MICE_NORM_Topo-14_trainlm_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.87%
+      Repeticao 3/10... acc teste = 100.00%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 99.87%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.87%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.98%
+      Media acc teste : 99.95%
+      Media erro teste: 16.6850
+
+[42/48] Configuracao: RN_MICE_NORM_Topo-14_trainlm_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 99.90%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 99.90%
+      Media acc global: 99.98%
+      Media acc teste : 99.95%
+      Media erro teste: 16.6825
+
+[43/48] Configuracao: RN_MICE_NORM_Topo-14_trainlm_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.73%
+      Repeticao 4/10... acc teste = 99.87%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 99.87%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.96%
+      Media acc teste : 99.93%
+      Media erro teste: 16.6878
+
+[44/48] Configuracao: RN_MICE_NORM_Topo-14_trainlm_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 99.80%
+      Repeticao 6/10... acc teste = 99.90%
+      Repeticao 7/10... acc teste = 99.80%
+      Repeticao 8/10... acc teste = 100.00%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.95%
+      Media acc teste : 99.93%
+      Media erro teste: 16.6921
+
+[45/48] Configuracao: RN_MICE_NORM_Topo-14_trainscg_logsig_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 99.87%
+      Repeticao 2/10... acc teste = 67.20%
+      Repeticao 3/10... acc teste = 66.40%
+      Repeticao 4/10... acc teste = 99.87%
+      Repeticao 5/10... acc teste = 66.13%
+      Repeticao 6/10... acc teste = 99.87%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 99.87%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 90.03%
+      Media acc teste : 89.92%
+      Media erro teste: 17.5329
+
+[46/48] Configuracao: RN_MICE_NORM_Topo-14_trainscg_logsig_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.90%
+      Repeticao 2/10... acc teste = 36.90%
+      Repeticao 3/10... acc teste = 67.60%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 99.90%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.90%
+      Repeticao 9/10... acc teste = 66.80%
+      Repeticao 10/10... acc teste = 67.60%
+      Media acc global: 83.85%
+      Media acc teste : 83.84%
+      Media erro teste: 18.2676
+
+[47/48] Configuracao: RN_MICE_NORM_Topo-14_trainscg_softmax_MF6_Div-0.7-0.15-0.15
+      Repeticao 1/10... acc teste = 100.00%
+      Repeticao 2/10... acc teste = 99.87%
+      Repeticao 3/10... acc teste = 99.87%
+      Repeticao 4/10... acc teste = 100.00%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 100.00%
+      Repeticao 7/10... acc teste = 100.00%
+      Repeticao 8/10... acc teste = 99.87%
+      Repeticao 9/10... acc teste = 100.00%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.98%
+      Media acc teste : 99.96%
+      Media erro teste: 16.6823
+
+[48/48] Configuracao: RN_MICE_NORM_Topo-14_trainscg_softmax_MF6_Div-0.6-0.2-0.2
+      Repeticao 1/10... acc teste = 99.70%
+      Repeticao 2/10... acc teste = 100.00%
+      Repeticao 3/10... acc teste = 99.90%
+      Repeticao 4/10... acc teste = 99.90%
+      Repeticao 5/10... acc teste = 100.00%
+      Repeticao 6/10... acc teste = 99.80%
+      Repeticao 7/10... acc teste = 99.90%
+      Repeticao 8/10... acc teste = 99.90%
+      Repeticao 9/10... acc teste = 99.90%
+      Repeticao 10/10... acc teste = 100.00%
+      Media acc global: 99.96%
+      Media acc teste : 99.90%
+      Media erro teste: 16.7054
+
+[5/6] A guardar resultados finais...
+      Resultados guardados em:
+      ./OUTPUT_3.3.a_RN_IMPL/Common/Resultados_Estudo_Parametrico.xlsx
+
+[6/6] A gerar grafico resumo...
+      Grafico guardado em:
+      ./OUTPUT_3.3.a_RN_IMPL/Common/plot_Top_RN_Accuracy_Teste.png
+
+======================================================
+ TP 3.3.a concluido.
+======================================================
+
+tp_main_run_all
+
+======================================================
+ EXECUCAO AUTOMATICA DO TRABALHO - CBR E RN
+======================================================
+

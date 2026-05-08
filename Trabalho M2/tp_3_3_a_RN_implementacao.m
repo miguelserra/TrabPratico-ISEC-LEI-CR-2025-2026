@@ -102,33 +102,57 @@ if modo_rapido
     % O enunciado pede 10 para a versao final.
     num_reps_nn = 3;
 else
-    % Configuracao mais completa para resultados finais
-    type_imput = ["Median", "MICE"];
-    type_data  = ["NORM"];
+%     % Configuracao mais completa para resultados finais
+%     type_imput = ["Median", "MICE"];
+%     type_data  = ["NORM"];
+% 
+%     topology = {
+%         10      %-> uma camada escondida com 10 neurónios
+%         [5 5]   %-> duas camadas escondidas com 5 neurónios cada
+%         6       %-> uma camada escondida com 6 neurónios
+%         [3 3]   %-> duas camadas escondidas com 3 neurónios cada
+%         14;     %-> uma camada escondida com 6 neurónios
+%         [7 7]   %-> duas camadas escondidas com 7 neurónios cada
+%     };
+% 
+%     training_fun   = ["trainlm", "traingd", "trainbr", "trainscg"];
+%     transf_fun_hid = ["tansig"];
+%     transf_fun_out = ["purelin", "tansig", "logsig", "softmax"];
+% 
+%     data_split_proportions = {
+% [0.7 0.15 0.15]  %-> 70% treino, 15% validação, 15% teste
+% [0.6 0.2 0.2]    %-> 60% treino, 20% validação, 20% teste
+% [0.9 0.05 0.05]  %-> 90% treino, 5% validação, 5% teste
+%     };
+% 
+%     epochs_max_fail = [2, 6, 20];
+% 
+%     % O enunciado pede 10 repeticoes por configuracao
+%     num_reps_nn = 10;
 
-    topology = {
-        10      %-> uma camada escondida com 10 neurónios
-        [5 5]   %-> duas camadas escondidas com 5 neurónios cada
-        6       %-> uma camada escondida com 6 neurónios
-        [3 3]   %-> duas camadas escondidas com 3 neurónios cada
-        14;     %-> uma camada escondida com 6 neurónios
-        [7 7]   %-> duas camadas escondidas com 7 neurónios cada
-    };
 
-    training_fun   = ["trainlm", "traingd", "trainbr", "trainscg"];
-    transf_fun_hid = ["tansig"];
-    transf_fun_out = ["purelin", "tansig", "logsig", "softmax"];
+% Configuracao final controlada
+type_imput = ["Median", "MICE"];
+type_data  = ["NORM"];
 
-    data_split_proportions = {
-[0.7 0.15 0.15]  %-> 70% treino, 15% validação, 15% teste
-[0.6 0.2 0.2]    %-> 60% treino, 20% validação, 20% teste
-[0.9 0.05 0.05]  %-> 90% treino, 5% validação, 5% teste
-    };
+topology = {
+    10;
+    [5 5];
+    14
+};
 
-    epochs_max_fail = [2, 6, 20];
+training_fun   = ["trainlm", "trainscg"];
+transf_fun_hid = ["tansig"];
+transf_fun_out = ["logsig", "softmax"];
 
-    % O enunciado pede 10 repeticoes por configuracao
-    num_reps_nn = 10;
+data_split_proportions = {
+    [0.7 0.15 0.15];
+    [0.6 0.2 0.2]
+};
+
+epochs_max_fail = [6];
+
+num_reps_nn = 10;
 end
 
 num_cases_total = numel(type_imput) * ...

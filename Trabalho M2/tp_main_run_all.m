@@ -2,19 +2,11 @@ function tp_main_run_all()
 %% TP_MAIN_RUN_ALL - Execucao completa automatica do projeto
 % Este main corre os scripts principais por ordem, sem pausas.
 %
-% Antes de correr:
-%   1) Confirmar que estas na raiz do projeto
-%   2) Confirmar que existem as pastas DADOS e functions
-%   3) Para execucao final das RN, no tp_3_3_a_RN_implementacao.m:
-%          modo_rapido = false;
-%   4) No tp_3_3_b_RN_dataset_bruto_vs_norm.m:
-%          num_reps_compare = 10;
-%   5) No tp_3_3_c_guardar_melhores_RN.m:
-%          num_reps_save = 10;
+% Guarda tambem um ficheiro de log com tudo o que apareceu na consola.
 %
-% Output:
-%   - Cria pasta LOGS
-%   - Guarda um ficheiro .txt com tudo o que apareceu na consola
+% ATENCAO:
+% O script 3.2.a nao e executado por defeito porque e interativo
+% e pode ficar parado a pedir input ao utilizador.
 
     clc;
     close all;
@@ -25,8 +17,8 @@ function tp_main_run_all()
 
     %% CONFIGURACOES DO MAIN
 
-    % Se estiver true, para logo no primeiro erro.
-    % Para deixar correr mesmo com erros, mete false.
+    % Se true, para no primeiro erro.
+    % Se false, tenta continuar para os scripts seguintes.
     STOP_ON_ERROR = true;
 
     % O script 3.2.a e interativo.
@@ -64,18 +56,30 @@ function tp_main_run_all()
     diary(log_name);
     diary on;
 
+    %% RELOGIO INICIAL
+
+    total_start = tic;
+    start_datetime = datetime("now");
+
     fprintf("Pasta do projeto: %s\n", project_dir);
     fprintf("Log da execucao: %s\n", log_name);
     fprintf("STOP_ON_ERROR = %d\n", STOP_ON_ERROR);
     fprintf("RUN_CBR_DEMO_INTERATIVO = %d\n", RUN_CBR_DEMO_INTERATIVO);
-    fprintf("\n");
+
+    fprintf("\n======================================================\n");
+    fprintf(" RELOGIO DE EXECUCAO\n");
+    fprintf("======================================================\n");
+    fprintf("Inicio da execucao: %s\n", string(start_datetime, "dd-MM-yyyy HH:mm:ss"));
+    fprintf("======================================================\n\n");
 
     fprintf("ATENCAO:\n");
-    fprintf("Se queres testar TODAS as configuracoes finais das RN,\n");
+    fprintf("Para testar TODAS as configuracoes finais das RN,\n");
     fprintf("confirma que no tp_3_3_a_RN_implementacao.m tens:\n");
     fprintf("    modo_rapido = false;\n\n");
 
-    total_start = tic;
+    fprintf("Tambem confirma, se quiseres resultados finais:\n");
+    fprintf("    tp_3_3_b_RN_dataset_bruto_vs_norm.m -> num_reps_compare = 10;\n");
+    fprintf("    tp_3_3_c_guardar_melhores_RN.m      -> num_reps_save = 10;\n\n");
 
     %% LISTA DE SCRIPTS A CORRER
 
@@ -102,7 +106,7 @@ function tp_main_run_all()
         "Comparacao final CBR vs Redes Neuronais";
     };
 
-    % Opcional: script interativo do ciclo CBR completo
+    % Opcional: incluir a demonstracao interativa do ciclo CBR
     if RUN_CBR_DEMO_INTERATIVO
         scripts = [
             scripts(1:2, :);
@@ -114,7 +118,7 @@ function tp_main_run_all()
         ];
     end
 
-    %% EXECUCAO
+    %% EXECUCAO DOS SCRIPTS
 
     num_scripts = size(scripts, 1);
     summary = cell(num_scripts, 4);
@@ -156,9 +160,11 @@ function tp_main_run_all()
             evalin('base', "run('" + script_file + "')");
 
             elapsed = toc(fase_start);
+            elapsed_total_now = toc(total_start);
 
             fprintf("\nFASE %d concluida com sucesso.\n", i);
-            fprintf("Tempo da fase: %.2f segundos | %.2f minutos\n", elapsed, elapsed/60);
+            fprintf("Tempo da fase: %s\n", format_duration(elapsed));
+            fprintf("Tempo acumulado: %s\n", format_duration(elapsed_total_now));
 
             summary{i, 1} = script_file;
             summary{i, 2} = script_desc;
@@ -168,11 +174,13 @@ function tp_main_run_all()
         catch ME
 
             elapsed = toc(fase_start);
+            elapsed_total_now = toc(total_start);
 
             fprintf("\nERRO NA FASE %d\n", i);
             fprintf("Script: %s\n", script_file);
             fprintf("Mensagem: %s\n", ME.message);
-            fprintf("Tempo ate ao erro: %.2f segundos\n", elapsed);
+            fprintf("Tempo ate ao erro: %s\n", format_duration(elapsed));
+            fprintf("Tempo acumulado: %s\n", format_duration(elapsed_total_now));
 
             if ~isempty(ME.stack)
                 fprintf("\nStack do erro:\n");
@@ -196,6 +204,7 @@ function tp_main_run_all()
     %% RESUMO FINAL
 
     total_elapsed = toc(total_start);
+    end_datetime = datetime("now");
 
     fprintf("\n\n======================================================\n");
     fprintf(" RESUMO FINAL DA EXECUCAO\n");
@@ -212,16 +221,21 @@ function tp_main_run_all()
         fprintf("   Estado: %s\n", string(summary{i, 3}));
 
         if ~isnan(summary{i, 4})
-            fprintf("   Tempo: %.2f segundos | %.2f minutos\n", summary{i, 4}, summary{i, 4}/60);
+            fprintf("   Tempo: %s\n", format_duration(summary{i, 4}));
         end
 
         fprintf("\n");
     end
 
-    fprintf("Tempo total: %.2f segundos | %.2f minutos | %.2f horas\n", ...
-        total_elapsed, total_elapsed/60, total_elapsed/3600);
+    fprintf("======================================================\n");
+    fprintf(" RELOGIO FINAL\n");
+    fprintf("======================================================\n");
+    fprintf("Inicio: %s\n", string(start_datetime, "dd-MM-yyyy HH:mm:ss"));
+    fprintf("Fim:    %s\n", string(end_datetime, "dd-MM-yyyy HH:mm:ss"));
+    fprintf("Tempo total: %s\n", format_duration(total_elapsed));
+    fprintf("======================================================\n\n");
 
-    fprintf("\nLog guardado em:\n%s\n", log_name);
+    fprintf("Log guardado em:\n%s\n", log_name);
 
     fprintf("\nPastas de output esperadas:\n");
     fprintf("  OUTPUT_3.1_TRATAMENTO\n");
@@ -235,4 +249,17 @@ function tp_main_run_all()
     diary off;
 
     fprintf("\nExecucao terminada. Verifica o ficheiro de log em LOGS.\n");
+end
+
+
+function txt = format_duration(seconds)
+%FORMAT_DURATION Converte segundos para formato HHh MMm SSs.
+
+    seconds = floor(seconds);
+
+    h = floor(seconds / 3600);
+    m = floor(mod(seconds, 3600) / 60);
+    s = mod(seconds, 60);
+
+    txt = sprintf("%02dh %02dm %02ds", h, m, s);
 end

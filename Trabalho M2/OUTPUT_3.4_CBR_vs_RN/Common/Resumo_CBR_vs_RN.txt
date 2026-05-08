@@ -14,7 +14,7 @@ Melhor resultado RN:
 - Ficheiro: best_RN_1.mat
 - Tipo de imputacao: MICE
 - Tipo de dados: NORM
-- Topologia: 10
+- Topologia: 14
 - Funcao de treino: trainlm
 - Funcao de saida: logsig
 - Accuracy global: 100.00%
