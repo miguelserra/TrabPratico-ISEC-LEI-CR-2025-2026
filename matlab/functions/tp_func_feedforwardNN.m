@@ -3,7 +3,8 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     %%%%%%%%%
     % SETUP %
     %%%%%%%%%
-    
+    accuracy = @tp_func_accuracy_NN ;
+
     case_name = neural_network_setup.case_name + "_R" + neural_network_setup.rep_num;
     
     % bloquear  
@@ -107,27 +108,4 @@ function [neural_network_setup] = tp_func_feedforwardNN(neural_network_setup, hi
     set(0, 'DefaultFigureVisible', 'on');
 
     neural_network_setup.net = net;
-end
-
-
-
-function [acc] = accuracy(target_predict, target_real)
-
-    %Calcula e mostra a percentagem de classificacoes corretas
-
-    r=0;
-    for i=1:size(target_predict,2)
-
-        % Para cada classificacao  
-        [ ~ , b ] = max( target_predict(:,i) );  % b guarda a linha onde encontrou valor mais alto da saida obtida
-        [ ~ , d ] = max(    target_real(:,i) );  % d guarda a linha onde encontrou valor mais alto da saida desejada
-        
-        % se estao na mesma linha, a classificacao foi correta (incrementa 1)
-        if b == d
-            r = r + 1;
-        end
-    end
-
-    acc = r / size(target_predict,2) * 100;
-
 end

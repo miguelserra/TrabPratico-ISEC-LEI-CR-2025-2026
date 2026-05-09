@@ -23,6 +23,7 @@ normalize_values = @tp_func_rescale_2          ;
 denorm_values    = @tp_func_rescale_reverse_2  ;
 nn_ff            = @tp_func_feedforwardNN      ;
 categ2cols       = @tp_func_categ2cols         ;
+confusion_mat    = @tp_func_confusion_matrix   ;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -167,11 +168,9 @@ parfor i = 1 : num_cases
                           avg_tr_time             ...
                         };
 
-    fig_conf = plotconfusion(best_nn.out_layer_test, best_nn.out_predict_test); 
-    conf_mat_path = output_folder_path + "/plot_confusao_" + curr_nn.rank + "_" ...
-                    + curr_nn.case_name + "_" + curr_nn.type_data +  ".png" ;
-    exportgraphics(fig_conf, conf_mat_path, 'Resolution', 300);
-    close(fig_conf);
+    confusion_mat(  best_nn.out_layer_test, best_nn.out_predict_test,...
+                    target_outputs, conf_mat_path)
+
 
 end
 
