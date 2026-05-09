@@ -97,7 +97,7 @@ num_cases = length(case_list);
 results_lst = cell(num_cases, 15);
 net_lst = cell(num_cases, 1);
 
-parfor i = 1 : num_cases
+for i = 1 : num_cases
     
     curr_nn = case_list{i}; 
 
@@ -168,11 +168,17 @@ parfor i = 1 : num_cases
                           avg_tr_time             ...
                         };
 
+
+    conf_mat_path = output_folder_path + "/plot_confusao_" + curr_nn.rank + "_" ...
+                    + curr_nn.case_name + "_" + curr_nn.type_data +  ".png" ;
+
     confusion_mat(  best_nn.out_layer_test, best_nn.out_predict_test,...
                     target_outputs, conf_mat_path)
 
 
 end
+
+
 
 
 res_col_names = {'rank', 'case_name', 'type_imp', 'type_data', 'topology', ...

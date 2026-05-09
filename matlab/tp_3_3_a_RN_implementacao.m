@@ -217,6 +217,22 @@ writetable(tab_results, file_out);
 fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
 
 
+params = ["topology", "training_fun", "transf_fun_out", "data_split", "epochs_max_fail"];
+
+for param = params
+    
+    rotation = 0;
+    if param == data_split
+        rotation = 15;
+    end
+    fig = tp_func_group_plot(file_out, param, rotation);
+    exportgraphics(fig, output_folder_path + "plot_Acc_MSE_" + xlsx_col + ".png", "Resolution", 300);
+    close(fig);
+
+end
+
+fprintf("\n\nEstudo Parametrico concluido e dados exportados com sucesso.\n\n")
+
 function [name] = gen_case_name(nn)
 
     name = "RN_" + nn.type_imp + "_" + "_Topo";
