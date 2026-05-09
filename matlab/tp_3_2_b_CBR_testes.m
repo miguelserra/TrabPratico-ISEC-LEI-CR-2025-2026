@@ -1,4 +1,18 @@
 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SETUP CBR DATASET TESTES %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% mostra imagens no ecra? 'on' : 'off'
+fig_visibility = 'off';
+
+% nome do ficheiro do dataset de teste
+name = "dataset_TP";
+
+% nome da pasta de output
+output_folder = "OUTPUT_3.2.b_CBR_TESTS";
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HANDLES DE FUNCOES                                               %
 %                        !!! IMPORTANTE !!!                        %
@@ -18,14 +32,6 @@ denorm_values    = @tp_func_rescale_reverse   ;
 clc;
 fprintf("\n\nTarefa: TESTE DE CBR --- A Iniciar..\n\n");
 
-% mostra imagens no ecra? 'on' : 'off'
-fig_visibility = 'off';
-
-% nome do ficheiro do dataset de teste
-name = "dataset_TP";
-
-% nome da pasta de output
-output_folder = "OUTPUT_3.2.b_CBR_TESTS";
 
 % prepara as pastas e nomes comuns via script aux
 tp_3_0_setup_common;

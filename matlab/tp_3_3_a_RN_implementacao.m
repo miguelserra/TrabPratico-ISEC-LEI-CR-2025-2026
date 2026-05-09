@@ -36,8 +36,8 @@ num_reps_nn = 30;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 addpath('functions');
 get_file         = @tp_func_get_xlfile      ;
-normalize_values = @tp_func_rescale         ;
-denorm_values    = @tp_func_rescale_reverse ;
+normalize_values = @tp_func_rescale_2         ;
+denorm_values    = @tp_func_rescale_reverse_2 ;
 nn_ff            = @tp_func_feedforwardNN   ;
 categ2cols       = @tp_func_categ2cols      ;
 
