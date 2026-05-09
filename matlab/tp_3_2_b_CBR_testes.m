@@ -24,7 +24,8 @@ retrieve         = @tp_func_retrieve          ;
 get_file         = @tp_func_get_xlfile        ;
 normalize_values = @tp_func_rescale           ;
 denorm_values    = @tp_func_rescale_reverse   ;
-
+categ2cols       = @tp_func_categ2cols        ;
+confusion_mat    = @tp_func_confusion_matrix  ;
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % PREPARAÇAO DE DADOS %
@@ -122,11 +123,11 @@ for t_imput = type_imput
                 [retrieved_max_simil, retrieved_max_simil_idx] = max(retrieved_simil);
                 
                 % retorna o valor do target estimado
-                predict_target = tabCaseLib{retrieved_max_simil_idx,"class_cat"};
+                predict_target = cell2mat(tabCaseLib{retrieved_max_simil_idx,"class_cat"});
 
                 % Guarda os resultados na linha correspondente da tabela
                 % (Usamos string() caso o target original venha como cell array de texto)
-                tabCaseLib_T.class_cat_predict{i}  = string(predict_target); 
+                tabCaseLib_T.class_cat_predict{i}  = predict_target; 
                 tabCaseLib_T.predict_idx(i)        = retrieved_max_simil_idx;
                 tabCaseLib_T.predict_similarity(i) = retrieved_max_simil;
 
@@ -156,11 +157,30 @@ for t_imput = type_imput
             results_lst(inc).config             = config_name;
             results_lst(inc).taxa_acerto        = accuracy_ratio;
             results_lst(inc).similaridade_media = sim_med;
+    
 
+            predict_col = target_col + "_predict";
+            [cases_table     , target_outputs] = categ2cols(tabCaseLib_T, target_col );
+            [pred_cases_table,       ~       ] = categ2cols(tabCaseLib_T, predict_col);
+            
+            out_test    = transpose(cases_table{:,target_outputs});
+            out_predict = transpose(pred_cases_table{:,target_outputs});
+
+            conf_mat_path = output_folder_path + t_imput + "/plot_confusao_" + "_" + t_imput + "_"+ t_data + "_" + t_wf + ".png" ;
+            confusion_mat(out_test, out_predict, target_outputs, conf_mat_path)
 
         end
     end
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% RESUMO DOS RESULTADOS %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+tab_res_cbr = struct2table(results_lst);
+file_name = output_folder_path + "Common/Resumo_Testes_CBR.xlsx";
+writetable(tab_res_cbr, file_name);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % PLOT DOS RESULTADOS %
@@ -168,12 +188,7 @@ end
  
 fprintf("\nTarefa: GERAR PLOTS --- Atributos vs Target...\n");
 
-tab_res_cbr = struct2table(results_lst);
 data_to_plot = [tab_res_cbr.taxa_acerto, tab_res_cbr.similaridade_media];
-
-w_order       = {'w', 'w2', '1s', 'soCat'};
-t_data_order  = {'ORIG', 'NORM'};
-t_imput_order = {'Median', 'MICE'};
 
 fig_cbr = figure('Visible', fig_visibility, 'Position', [100, 100, 1200, 600]); 
 b = bar(data_to_plot, 'grouped');

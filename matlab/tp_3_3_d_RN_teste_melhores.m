@@ -89,7 +89,6 @@ for i = 1 : height(results_top3)
         tabCaseLib_T{:, att_cols} = normalize_values(tabCaseLib_T{:, att_cols}, cols_min, cols_max);
     
     end
-
     
 
     inp_layer_test = transpose( tabCaseLib_T{:,    att_cols   } );
