@@ -100,16 +100,9 @@ for i = 1 : height(results_top3)
     error_test = perform(net_setup.net, out_predict_test, out_layer_test);
     acc_test   = accuracy(out_predict_test, out_layer_test);
     
-    neural_network_setup.err_test         = error_test * 100;
-    neural_network_setup.acc_test         = acc_test;
-    neural_network_setup.out_layer_test   = out_layer_test;
-    neural_network_setup.out_predict_test = out_predict_test;
-
-    fprintf('\nErro na classificaçao (fase de teste) = %f\n', error_test)
-    fprintf("Precisao total (fase de teste) = %f\n", acc_test)
-    
+    % plot da mat confusao
     conf_mat_path = output_folder_path + "/plot_confusao_" + nn_name + "_VS_datasetTP_test.png" ;
-    confusion_mat(out_layer_test, out_predict_test, target_outputs, conf_mat_path)
+    confusion_mat(out_layer_test, out_predict_test, target_outputs, conf_mat_path, nn_name)
 
 
 end

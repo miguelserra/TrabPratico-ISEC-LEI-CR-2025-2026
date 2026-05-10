@@ -102,9 +102,9 @@ function [operating_mode_sim] = get_operating_mode_similarities()
 
     operating_mode_sim.similarities = [
           % Idle    Normal  Overload
-            1.0     0.3     0.0      % Idle
-            0.3     1.0     0.6      % Normal
-            0.0     0.6     1.0      % Overload
+            1.0     0.3     0.0     % Idle
+            0.3     1.0     0.6     % Normal
+            0.0     0.6     1.0     % Overload
     ];
 
 end
@@ -116,7 +116,7 @@ function [cooling_type_sim] = get_cooling_type_similarities()
 
     cooling_type_sim.similarities = [
         %   Air     Oil 
-            1.0     0.0    % Air
+            1.0     0.0  % Air
             0.0     1.0    % Oil
     ];
 

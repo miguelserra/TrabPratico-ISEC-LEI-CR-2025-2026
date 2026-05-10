@@ -29,6 +29,11 @@ num_reps_nn = 30;
 %learn_rates = [0.01, 0.05, 0.1]; 
 % Nao foi adotada a variacao porque so e' valida para gradient descent
 
+
+% nome da pasta de output
+output_folder = "OUTPUT_3.3.a_RN_IMPL";
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HANDLES DE FUNCOES                                               %
 %                        !!! IMPORTANTE !!!                        %
@@ -51,9 +56,6 @@ clc;
 rng('shuffle', 'twister'); % força uma randomizaçao eficaz
 
 fprintf("\n\nTarefa: IMPLEMENTACAO DE REDES NEURONAIS --- A Iniciar..\n\n");
-
-% nome da pasta de output
-output_folder = "OUTPUT_3.3.a_RN_IMPL";
 
 
 %&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -222,11 +224,11 @@ params = ["topology", "training_fun", "transf_fun_out", "data_split", "epochs_ma
 for param = params
     
     rotation = 0;
-    if param == data_split
+    if param == "data_split"
         rotation = 15;
     end
     fig = tp_func_group_plot(file_out, param, rotation);
-    exportgraphics(fig, output_folder_path + "plot_Acc_MSE_" + xlsx_col + ".png", "Resolution", 300);
+    exportgraphics(fig, output_folder_path + "plot_Acc_MSE_" + param + ".png", "Resolution", 300);
     close(fig);
 
 end

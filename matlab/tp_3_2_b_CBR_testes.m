@@ -12,6 +12,34 @@ name = "dataset_TP";
 % nome da pasta de output
 output_folder = "OUTPUT_3.2.b_CBR_TESTS";
 
+% casos de analise
+type_imput = ["Median" , "MICE"];  %tipos de imputaçao de fill nans
+type_data  = [ "ORIG"  , "NORM"]; %tipos de dados - originais ou normalizados
+
+
+% 1 temperature
+% 2 vibration
+% 3 rotation speed
+% 4 voltage
+% 5 current
+% 6 pressure
+% 7 noise_level
+% 8 efficiency
+% 9 load_val
+% 10 torque
+% 11 maintenance_level
+% 12 operating_mode
+% 13 cooling_type
+% 14 sensor_status
+                                %  1   2   3   4   5   6   7   8   9  10   11  12  13  14
+weighting_factors = dictionary(  ["1s", "Est", "FS2", "FS3", "soNum", "soCat"]        , ...
+                               { [ 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 ]      , ... tudo 1s
+                                 [ 5 , 5 , 4 , 2 , 4 , 1 , 3 , 3 , 3 , 3 , 3 , 2 , 2 , 3 ]      , ... pesos estimados
+                                 [ 0 , 0 , 0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]      , ... Feature Selection 2 
+                                 [ 0 , 1 , 0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]      , ... Feature Selection 3
+                                 [ 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 ]      , ... so numericos
+                                 [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 1 ]    }); ... so categoricos
+                                 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HANDLES DE FUNCOES                                               %
@@ -49,17 +77,7 @@ mkdir(output_folder_path + "Common/")
 mkdir(output_folder_path + "Median/")
 mkdir(output_folder_path + "MICE/")
 
-% casos de analise
-type_imput = ["Median" , "MICE"];  %tipos de imputaçao de fill nans
-type_data  = [ "ORIG"  , "NORM"]; %tipos de dados - originais ou normalizados
 
-weighting_factors = dictionary(  ["w", "w2", "1s" , "soCat"]        , ...
-                               { [5,5,4,2,4,1,3,3,3,3,3,2,2,3]      , ... pesos estimados, w
-                                 [25,25,16,4,16,1,9,9,9,9,9,4,4,9]  , ... w^2
-                                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1]      , ... tudo 1s
-                                 [0,0,0,0,0,0,0,0,0,0,1,1,1,1]    });... so categoricos
-                                 
-                                 
 
 %%%%%%%%%%%%%%
 % SCRIPT CBR %
@@ -167,7 +185,7 @@ for t_imput = type_imput
             out_predict = transpose(pred_cases_table{:,target_outputs});
 
             conf_mat_path = output_folder_path + t_imput + "/plot_confusao_" + "_" + t_imput + "_"+ t_data + "_" + t_wf + ".png" ;
-            confusion_mat(out_test, out_predict, target_outputs, conf_mat_path)
+            confusion_mat(out_test, out_predict, target_outputs, conf_mat_path, t_imput + "_"+ t_data + "_" + t_wf);
 
         end
     end
@@ -191,7 +209,7 @@ fprintf("\nTarefa: GERAR PLOTS --- Atributos vs Target...\n");
 data_to_plot = [tab_res_cbr.taxa_acerto, tab_res_cbr.similaridade_media];
 
 fig_cbr = figure('Visible', fig_visibility, 'Position', [100, 100, 1200, 600]); 
-b = bar(data_to_plot, 'grouped');
+b = bar(data_to_plot, 1, 'grouped');
 
 xticks(1:height(tab_res_cbr));
 xticklabels(tab_res_cbr.config);

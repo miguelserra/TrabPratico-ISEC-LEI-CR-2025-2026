@@ -173,7 +173,7 @@ for i = 1 : num_cases
                     + curr_nn.case_name + "_" + curr_nn.type_data +  ".png" ;
 
     confusion_mat(  best_nn.out_layer_test, best_nn.out_predict_test,...
-                    target_outputs, conf_mat_path)
+                    target_outputs, conf_mat_path, curr_nn.case_name)
 
 
 end

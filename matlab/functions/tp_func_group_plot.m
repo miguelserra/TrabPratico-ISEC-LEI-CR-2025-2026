@@ -1,4 +1,4 @@
-function tp_func_group_plot(xlsx_path, xlsx_cols, xtickslbl_rot)
+function fig = tp_func_group_plot(xlsx_path, xlsx_cols, xtickslbl_rot)
 
 
     results_tab = readtable(xlsx_path);
@@ -41,7 +41,7 @@ function tp_func_group_plot(xlsx_path, xlsx_cols, xtickslbl_rot)
     grid on;
     grid minor;
     
-    name = join(string(xlsx_cols), "_");
-    exportgraphics(fig,"plot_Acc_MSE_" + name + ".png", "Resolution", 300);
-    close(fig);
+    %name = join(string(xlsx_cols), "_");
+    %exportgraphics(fig,"plot_Acc_MSE_" + name + ".png", "Resolution", 300);
+    %close(fig);
 end
